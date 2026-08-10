@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     // 1. CREATE CREW ACTION
     if (action === 'create') {
-      const { name, tagline } = body;
+      const { name, tagline, creatorName, creatorRole, creatorStack, creatorTwitter, creatorPhoto } = body;
       if (!name) {
         return NextResponse.json({ success: false, error: 'Crew name is required' }, { status: 400 });
       }
@@ -40,15 +40,49 @@ export async function POST(request: Request) {
       const code = generateCrewCode();
       const ownerToken = generateOwnerToken();
 
+      let members: Member[] = [];
+
+      if (creatorName && creatorRole && creatorStack && creatorPhoto) {
+        let finalPhotoUrl = creatorPhoto;
+        
+        // Upload photo to Vercel Blob if configured
+        if (process.env.BLOB_READ_WRITE_TOKEN && creatorPhoto.startsWith('data:image/')) {
+          try {
+            const base64Data = creatorPhoto.split(',')[1];
+            const buffer = Buffer.from(base64Data, 'base64');
+            const blob = await put(`crews/photos/${Date.now()}-${creatorName.replace(/[^a-zA-Z0-9]/g, '')}.png`, buffer, {
+              contentType: 'image/png',
+              access: 'public',
+            });
+            finalPhotoUrl = blob.url;
+          } catch (err: unknown) {
+            console.error('Failed to upload creator photo to Vercel Blob:', err);
+          }
+        }
+
+        const builderTitle = generateBuilderTitle(creatorName, creatorStack, creatorRole);
+        
+        members.push({
+          id: 'MEM-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+          name: creatorName.substring(0, 20),
+          role: creatorRole,
+          stack: creatorStack,
+          builderTitle,
+          xHandle: creatorTwitter ? (creatorTwitter.startsWith('@') ? creatorTwitter : '@' + creatorTwitter).substring(0, 20) : undefined,
+          photo: finalPhotoUrl,
+          joinedAt: new Date().toISOString(),
+        });
+      }
+
       const newCrew: Crew = {
         code,
         ownerToken,
         name: name.substring(0, 30),
         tagline: (tagline || '').substring(0, 50),
-        generatedClass: 'SOLO INVENTOR',
-        crewStack: '',
+        generatedClass: members.length > 0 ? calculateCrewClass(members) : 'SOLO INVENTOR',
+        crewStack: members.length > 0 ? calculateCrewStack(members) : '',
         createdAt: new Date().toISOString(),
-        members: [],
+        members,
       };
 
       await saveCrew(newCrew);

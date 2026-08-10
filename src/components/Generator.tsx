@@ -101,12 +101,12 @@ export default function Generator() {
   return (
     <div className="w-full font-sans select-none">
       {/* 1. Main Tab Navigation Header */}
-      <div className="flex border-3 border-[#0a2e1d] bg-[#faf8f0] p-1.5 shadow-[4px_4px_0px_0px_#0a2e1d] max-w-md mx-auto mb-8 text-[#0b4f30]">
+      <div className="flex border-3 border-[#0a2e1d] bg-[#faf8f0] p-1.5 shadow-[4px_4px_0px_0px_#0a2e1d] max-w-lg mx-auto mb-8 text-[#0b4f30]">
         <button
           onClick={() => { setActiveTab('frame'); setStep('upload'); }}
           className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
             activeTab === 'frame'
-              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30]'
+              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
               : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
           }`}
         >
@@ -116,7 +116,7 @@ export default function Generator() {
           onClick={() => { setActiveTab('pass'); setStep('upload'); }}
           className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
             activeTab === 'pass'
-              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30]'
+              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
               : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
           }`}
         >
@@ -126,26 +126,42 @@ export default function Generator() {
           onClick={() => { setActiveTab('crew'); }}
           className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all relative ${
             activeTab === 'crew'
-              ? 'bg-[#ff007f] border-[#0a2e1d] text-[#faf8f0] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
+              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
               : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
           }`}
         >
-          CREW MODE ⚡
+          CREW MODE ✦
         </button>
       </div>
 
       {/* RENDER CREW WORKSPACE */}
       {activeTab === 'crew' ? (
-        <CrewWorkspace initialCode={initialCrewCode} />
+        <CrewWorkspace
+          initialCode={initialCrewCode}
+          defaultDetails={details}
+          defaultPhotoUrl={photoUrl || undefined}
+        />
       ) : (
         /* RENDER INDIVIDUAL BUILDER WORKSPACE */
         <>
           {/* Refined Step Progress Header in Retro style */}
-          <div className="max-w-xs mx-auto mb-8 text-center">
-            <div className="flex items-center justify-between text-xs font-black uppercase font-vt tracking-widest text-[#faf8f0]/60 mb-2 px-1">
-              <span className={step === 'upload' ? 'text-[#fadb14]' : ''}>[ 1. UPLOAD ]</span>
-              <span className={step === 'adjust' ? 'text-[#fadb14]' : ''}>[ 2. CUSTOMIZE ]</span>
-              <span className={step === 'result' ? 'text-[#fadb14]' : ''}>[ 3. EXPORT ]</span>
+          <div className="max-w-xs mx-auto mb-6 text-center">
+            <div className="flex items-center justify-between text-xs font-black uppercase font-vt tracking-widest mb-2 px-1">
+              <span className={
+                step === 'upload' ? 'text-[#fadb14]' : 
+                (step === 'adjust' || step === 'result') ? 'text-[#faf8f0]/40 font-mono line-through' : 'text-[#faf8f0]/60'
+              }>
+                {step !== 'upload' ? '1. UPLOAD ✓' : '1. UPLOAD'}
+              </span>
+              <span className={
+                step === 'adjust' ? 'text-[#fadb14]' : 
+                step === 'result' ? 'text-[#faf8f0]/40 font-mono line-through' : 'text-[#faf8f0]/60'
+              }>
+                {step === 'result' ? '2. CUSTOMIZE ✓' : '2. CUSTOMIZE'}
+              </span>
+              <span className={step === 'result' ? 'text-[#fadb14]' : 'text-[#faf8f0]/40'}>
+                3. EXPORT
+              </span>
             </div>
             <div className="w-full h-1 bg-[#0a2e1d] rounded-full overflow-hidden flex">
               <div
@@ -159,21 +175,18 @@ export default function Generator() {
 
           {/* Main Switcher */}
           {step === 'upload' && (
-            <div className="space-y-6">
-              <div className="text-center max-w-2xl mx-auto mb-6 space-y-3">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-xs font-mono tracking-wider">
+            <div className="space-y-5">
+              <div className="text-center max-w-2xl mx-auto mb-4 space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-[10px] font-mono tracking-wider uppercase">
                   ✦ HH GOA BUILDER HOUSE 2026 ✦
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black font-serif text-white tracking-tight leading-tight uppercase">
-                  YOUR HH GOA<br/>
-                  <span className="text-[#fadb14] drop-shadow-md">
-                    {activeTab === 'frame' ? 'AVATAR OVERLAY' : 'BUILDER IDENTITY'}
-                  </span>
+                  {activeTab === 'frame' ? 'FRAME YOUR BUILD.' : 'CREATE YOUR PASS.'}
                 </h2>
-                <p className="text-[#faf8f0]/85 text-sm leading-relaxed max-w-lg mx-auto font-mono">
+                <p className="text-[#faf8f0]/85 text-xs leading-relaxed max-w-xs sm:max-w-md mx-auto font-mono">
                   {activeTab === 'frame'
-                    ? 'Generate your custom beach-themed avatar frame, perfect for your X profile picture.'
-                    : 'Design your personalized hackathon builder pass card with custom stack labels.'}
+                    ? 'Create your HH Goa 2026 identity frame for your profile.'
+                    : 'Design your personalized hackathon builder pass with custom stack labels.'}
                 </p>
               </div>
               
@@ -236,21 +249,29 @@ export default function Generator() {
 
                   {/* Generate Button */}
                   <div className="pt-2">
+                    {isCard && (!details.name.trim() || !details.stack || !details.role) && (
+                      <p className="text-xs text-[#ff007f] font-bold font-mono text-center mb-2.5 uppercase tracking-wider">
+                        ✦ Enter name, stack & role to unlock pass ✦
+                      </p>
+                    )}
                     <button
                       onClick={handleGenerate}
-                      disabled={generating}
-                      className="retro-button-yellow w-full py-4 px-6 flex items-center justify-center gap-2 group cursor-pointer"
+                      disabled={generating || (isCard && (!details.name.trim() || !details.stack || !details.role))}
+                      className={`w-full py-4 px-6 flex items-center justify-center gap-2 group transition-all ${
+                        isCard && (!details.name.trim() || !details.stack || !details.role)
+                          ? 'bg-[#faf8f0]/10 border-2 border-dashed border-[#faf8f0]/20 text-[#faf8f0]/30 shadow-none cursor-not-allowed'
+                          : 'retro-button-yellow cursor-pointer'
+                      }`}
                     >
                       {generating ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
-                          GENERATING PASS...
+                          <span>{isCard ? 'GENERATING YOUR PASS...' : 'FRAMING YOUR BUILD...'}</span>
                         </>
                       ) : (
                         <>
                           <Sparkles className="w-5 h-5" />
-                          GENERATE {isCard ? 'BUILDER PASS' : 'PFP OVERLAY'}
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <span>{isCard ? 'CREATE MY BUILDER PASS →' : 'CREATE MY FRAME →'}</span>
                         </>
                       )}
                     </button>

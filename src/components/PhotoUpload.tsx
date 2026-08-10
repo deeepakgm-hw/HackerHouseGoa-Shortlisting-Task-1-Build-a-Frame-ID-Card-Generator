@@ -22,7 +22,7 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
 
     // Validate size (max 15MB)
     if (file.size > 15 * 1024 * 1024) {
-      setError('Photo exceeds size limit. Keep it under 15MB.');
+      setError('Keep your builder photo under 15MB.');
       setLoading(false);
       return;
     }
@@ -48,11 +48,11 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
         const url = URL.createObjectURL(file);
         onPhotoSelected(url, file);
       } else {
-        setError('Unsupported file type. Upload JPG, PNG, or HEIC.');
+        setError('Try a PNG, JPG or HEIC photo.');
       }
     } catch (err: unknown) {
       console.error('File processing error:', err);
-      setError('Could not read image file. Try another JPG or PNG.');
+      setError('Try a PNG, JPG or HEIC photo.');
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
         onDragLeave={handleDrag}
         onDrop={handleDrop}
         onClick={onButtonClick}
-        className={`relative border-3 border-dashed rounded-2xl p-8 md:p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[280px] group ${
+        className={`relative border-3 border-dashed rounded-2xl p-8 md:p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[260px] group ${
           isDragActive
             ? 'border-[#ff007f] bg-[#ff007f]/10 scale-[1.01] shadow-[6px_6px_0px_0px_#0a2e1d]'
             : 'border-[#0a2e1d] bg-[#faf8f0] hover:bg-[#faf8f0]/95 hover:shadow-[6px_6px_0px_0px_#0a2e1d]'
@@ -127,22 +127,22 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
             
             <div className="space-y-2">
               <h3 className="text-lg font-black uppercase font-serif tracking-tight">
-                Upload your builder photo
+                UPLOAD YOUR BUILDER PHOTO
               </h3>
               
               <p className="text-slate-500 text-xs font-mono max-w-xs mx-auto">
-                Drag & drop or tap to select from device
+                Drag & drop or choose from your device
               </p>
               
-              <div className="flex items-center justify-center gap-2 pt-2">
-                <span className="px-2 py-0.5 rounded border border-[#0a2e1d] bg-[#fadb14] text-[#0b4f30] text-[10px] font-extrabold font-mono">PNG</span>
-                <span className="px-2 py-0.5 rounded border border-[#0a2e1d] bg-[#fadb14] text-[#0b4f30] text-[10px] font-extrabold font-mono">JPG</span>
-                <span className="px-2 py-0.5 rounded border border-[#0a2e1d] bg-[#fadb14] text-[#0b4f30] text-[10px] font-extrabold font-mono">HEIC</span>
+              <div className="flex items-center justify-center gap-1.5 pt-2 text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider">
+                <span>PNG</span>
+                <span>·</span>
+                <span>JPG</span>
+                <span>·</span>
+                <span>HEIC</span>
+                <span>·</span>
+                <span>MAX 15MB</span>
               </div>
-              
-              <p className="text-[10px] text-slate-400 font-mono mt-1">
-                Supports portrait, landscape & square. Max 15MB.
-              </p>
             </div>
           </div>
         )}

@@ -39,7 +39,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
           <input
             id="name"
             type="text"
-            placeholder="Satoshi Nakamoto"
+            placeholder="Your full name"
             value={details.name}
             onChange={handleInputChange('name')}
             maxLength={25}
@@ -56,7 +56,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             onChange={handleInputChange('stack')}
             className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
           >
-            <option value="">Select Stack</option>
+            <option value="">Select your stack</option>
             {STACKS.map(st => (
               <option key={st} value={st}>{st}</option>
             ))}
@@ -87,7 +87,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             onChange={handleInputChange('role')}
             className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
           >
-            <option value="">Select Role</option>
+            <option value="">Select your role</option>
             {ROLES.map(rl => (
               <option key={rl} value={rl}>{rl}</option>
             ))}
@@ -100,7 +100,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
           <input
             id="location"
             type="text"
-            placeholder="Goa, India or Remote"
+            placeholder="Your city or 'Remote'"
             value={details.location}
             onChange={handleInputChange('location')}
             maxLength={20}
@@ -114,7 +114,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
           <input
             id="handle"
             type="text"
-            placeholder="@satoshi"
+            placeholder="@yourhandle"
             value={details.twitter}
             onChange={handleInputChange('twitter')}
             maxLength={20}

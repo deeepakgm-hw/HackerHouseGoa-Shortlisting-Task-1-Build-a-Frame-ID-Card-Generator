@@ -452,73 +452,105 @@ export function drawBuilderCard(
   const contentY = 730;
 
   // Category Stamp
-  ctx.font = 'bold 18px monospace';
+  ctx.font = 'bold 20px monospace';
   ctx.fillStyle = pink;
   ctx.textAlign = 'center';
-  ctx.fillText('✦ HH GOA BUILDER IDENTITY ✦', w / 2, contentY);
+  ctx.fillText('✦ HH GOA BUILDER PASS ✦', w / 2, contentY);
 
-  // Name (Oversized, dominant)
-  ctx.font = 'bold 74px serif';
-  ctx.fillStyle = dark;
-  ctx.fillText((details.name || 'ANONYMOUS BUILDER').toUpperCase(), w / 2, contentY + 70);
-
-  // Title sticker badge
-  const titleY = contentY + 165;
-  ctx.save();
-  ctx.font = 'bold 32px monospace';
-  const titleText = (details.title || 'GOA BUILDER').toUpperCase();
-  const textWidth = ctx.measureText(titleText).width;
-  const badgeW = textWidth + 56;
-  const badgeH = 68;
-
-  // Sticker shadow
-  ctx.fillStyle = dark;
-  ctx.fillRect(w / 2 - badgeW / 2 + 5, titleY - 44 + 5, badgeW, badgeH);
-
-  // Yellow label base
-  ctx.fillStyle = yellow;
-  ctx.fillRect(w / 2 - badgeW / 2, titleY - 44, badgeW, badgeH);
-  ctx.strokeStyle = dark;
-  ctx.lineWidth = 3.5;
-  ctx.strokeRect(w / 2 - badgeW / 2, titleY - 44, badgeW, badgeH);
-
+  // Name (Oversized, dominant with dynamic fitting)
+  const displayName = (details.name || 'YOUR NAME').toUpperCase();
+  let nameFontSize = 74;
+  if (displayName.length > 20) {
+    nameFontSize = 46;
+  } else if (displayName.length > 15) {
+    nameFontSize = 58;
+  }
+  ctx.font = `bold ${nameFontSize}px serif`;
   ctx.fillStyle = dark;
   ctx.textAlign = 'center';
-  ctx.fillText(titleText, w / 2, titleY + 3);
-  ctx.restore();
+  ctx.fillText(displayName, w / 2, contentY + 75);
 
-  // 5. Reduced support metadata (clean block layout)
-  const metaY = contentY + 260;
-  ctx.strokeStyle = 'rgba(10, 46, 29, 0.1)';
-  ctx.lineWidth = 2;
+  // Builder Title (Secondary, medium-large)
+  const displayTitle = (details.title || 'BUILDER TITLE').toUpperCase();
+  let titleFontSize = 30;
+  if (displayTitle.length > 25) {
+    titleFontSize = 22;
+  }
+  ctx.font = `bold ${titleFontSize}px monospace`;
+  ctx.fillStyle = green;
+  ctx.textAlign = 'center';
+  ctx.fillText(displayTitle, w / 2, contentY + 135);
+
+  // Separator Line
+  const metaY = contentY + 190;
+  ctx.strokeStyle = 'rgba(10, 46, 29, 0.15)';
+  ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(180, metaY - 20);
-  ctx.lineTo(w - 180, metaY - 20);
+  ctx.moveTo(180, metaY);
+  ctx.lineTo(w - 180, metaY);
   ctx.stroke();
 
-  ctx.font = 'bold 16px monospace';
-  ctx.fillStyle = green;
-  ctx.textAlign = 'left';
+  // Spaced metadata columns (Clean two-row, two-column hierarchy layout)
+  const roleVal = (details.role || 'BUILDER').toUpperCase();
+  const stackVal = (details.stack || 'GENERAL').toUpperCase();
+  const locVal = (details.location || 'GOA HOUSE').toUpperCase();
+  const twitterVal = (details.twitter || '@HHGOA').trim().toUpperCase();
+
+  const colLeftX = 220;
+  const colRightX = w - 220;
   
-  const roleText = `ROLE // ${(details.role || 'Hacker').toUpperCase()}`;
-  const stackText = `STACK // ${(details.stack || 'General').toUpperCase()}`;
-  const locText = `LOC // ${(details.location || 'Goa House').toUpperCase()}`;
+  ctx.textBaseline = 'top';
 
-  ctx.fillText(roleText, 180, metaY + 15);
-  ctx.fillText(stackText, 180, metaY + 45);
-  ctx.fillText(locText, 180, metaY + 75);
-
-  // Right Column (Handle / Info)
-  ctx.textAlign = 'right';
+  // ROW 1: STACK (Left) & ROLE (Right)
+  // Stack
+  ctx.font = 'bold 16px monospace';
   ctx.fillStyle = pink;
-  ctx.fillText(`HANDLE // ${(details.twitter || details.github || '@HHGOA').toUpperCase()}`, w - 180, metaY + 15);
-  ctx.fillStyle = green;
-  ctx.fillText(`CLASS // GENERAL BUILDER`, w - 180, metaY + 45);
-  ctx.fillText(`STATUS // DEPLOYED`, w - 180, metaY + 75);
+  ctx.textAlign = 'left';
+  ctx.fillText('STACK', colLeftX, metaY + 20);
+  ctx.font = 'bold 26px serif';
+  ctx.fillStyle = dark;
+  ctx.fillText(stackVal, colLeftX, metaY + 44);
 
-  // 6. GOA READY Stamp (Jagged Circle outline, stamped on card)
+  // Role
+  ctx.font = 'bold 16px monospace';
+  ctx.fillStyle = pink;
+  ctx.textAlign = 'right';
+  ctx.fillText('ROLE', colRightX, metaY + 20);
+  ctx.font = 'bold 26px serif';
+  ctx.fillStyle = dark;
+  ctx.fillText(roleVal, colRightX, metaY + 44);
+
+  // ROW 2: LOCATION (Left) & HANDLE (Right)
+  const row2Y = metaY + 105;
+
+  // Location
+  ctx.font = 'bold 16px monospace';
+  ctx.fillStyle = pink;
+  ctx.textAlign = 'left';
+  ctx.fillText('LOCATION', colLeftX, row2Y);
+  ctx.font = 'bold 26px serif';
+  ctx.fillStyle = dark;
+  ctx.fillText(locVal, colLeftX, row2Y + 24);
+
+  // Handle
+  ctx.font = 'bold 16px monospace';
+  ctx.fillStyle = pink;
+  ctx.textAlign = 'right';
+  ctx.fillText('HANDLE', colRightX, row2Y);
+  ctx.font = 'bold 26px serif';
+  ctx.fillStyle = dark;
+  ctx.fillText(twitterVal, colRightX, row2Y + 24);
+
+  // Bottom separator line
+  ctx.strokeStyle = 'rgba(10, 46, 29, 0.15)';
+  ctx.beginPath();
+  ctx.moveTo(180, row2Y + 70);
+  ctx.lineTo(w - 180, row2Y + 70);
+  ctx.stroke();
+
+  // 6. GOA READY Stamp (Jagged Circle outline, stamped on card - highly legible)
   ctx.save();
-  ctx.translate(w - 240, contentY + 115);
+  ctx.translate(w - 240, contentY + 95);
   ctx.rotate(-0.12);
   
   // Outer circle with small tabs for stamp look
@@ -537,12 +569,12 @@ export function drawBuilderCard(
   ctx.arc(0, 0, 60, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.font = '900 16px monospace';
+  ctx.font = '900 18px monospace';
   ctx.fillStyle = cream;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('GOA', 0, -18);
-  ctx.font = 'bold 24px serif';
+  ctx.font = 'bold 28px serif';
   ctx.fillText('READY', 0, 10);
   ctx.restore();
 
@@ -566,7 +598,10 @@ export function drawBuilderCard(
   ctx.font = '15px monospace';
   ctx.fillStyle = green;
   ctx.textAlign = 'center';
-  ctx.fillText(`SERIAL: HH-2026-${details.name ? details.name.substring(0, 3).toUpperCase() : 'HCK'}-${Math.floor(1000 + Math.random() * 9000)}`, w / 2, barcodeY + 80);
+  const nameCode = details.name ? details.name.substring(0, 3).toUpperCase().padEnd(3, 'X') : 'HCK';
+  const nameSum = (details.name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const serialNo = String(1000 + (nameSum % 9000)).padStart(4, '0');
+  ctx.fillText(`HH26 • GOA • ${nameCode} • ${serialNo}`, w / 2, barcodeY + 80);
 
   ctx.restore();
 }

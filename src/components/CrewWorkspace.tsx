@@ -4,13 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, Copy, Clipboard, Check, Trash2, ArrowRight, ArrowLeft, Download, Share2, RefreshCw } from 'lucide-react';
 import PhotoUpload from './PhotoUpload';
 import { Crew, Member, calculateCrewClass, calculateCrewStack } from '../lib/crewDb';
-import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp } from '../lib/canvasDraw';
+import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp, BuilderDetails } from '../lib/canvasDraw';
 
 interface CrewWorkspaceProps {
   initialCode?: string;
+  defaultDetails?: BuilderDetails;
+  defaultPhotoUrl?: string;
 }
 
-export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
+export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhotoUrl }: CrewWorkspaceProps) {
   const [crew, setCrew] = useState<Crew | null>(null);
   const [code, setCode] = useState(initialCode || '');
   const [ownerToken, setOwnerToken] = useState('');
@@ -19,9 +21,32 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
   const [view, setView] = useState<'landing' | 'create' | 'dashboard' | 'join' | 'result'>('landing');
   
   // Forms state
-  const [createForm, setCreateForm] = useState({ name: '', tagline: '' });
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    tagline: '',
+    creatorName: defaultDetails?.name || '',
+    creatorRole: defaultDetails?.role || '',
+    creatorStack: defaultDetails?.stack || '',
+    creatorTwitter: defaultDetails?.twitter || '',
+    creatorPhoto: defaultPhotoUrl || '',
+  });
+  
   const [joinForm, setJoinForm] = useState({ name: '', role: '', stack: '', xHandle: '', photo: '' });
   
+  // Update creator form values if parent props load asynchronously
+  useEffect(() => {
+    if (defaultDetails || defaultPhotoUrl) {
+      setCreateForm((prev) => ({
+        ...prev,
+        creatorName: prev.creatorName || defaultDetails?.name || '',
+        creatorRole: prev.creatorRole || defaultDetails?.role || '',
+        creatorStack: prev.creatorStack || defaultDetails?.stack || '',
+        creatorTwitter: prev.creatorTwitter || defaultDetails?.twitter || '',
+        creatorPhoto: prev.creatorPhoto || defaultPhotoUrl || '',
+      }));
+    }
+  }, [defaultDetails, defaultPhotoUrl]);
+
   // UI States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,6 +101,11 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
     e.preventDefault();
     if (!createForm.name) return;
     
+    if (!createForm.creatorName || !createForm.creatorRole || !createForm.creatorStack || !createForm.creatorPhoto) {
+      setError('Creator photo, name, stack, and role are required to create a crew.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -86,6 +116,11 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
           action: 'create',
           name: createForm.name,
           tagline: createForm.tagline,
+          creatorName: createForm.creatorName,
+          creatorRole: createForm.creatorRole,
+          creatorStack: createForm.creatorStack,
+          creatorTwitter: createForm.creatorTwitter,
+          creatorPhoto: createForm.creatorPhoto,
         }),
       });
       const data = await res.json();
@@ -384,6 +419,7 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
           <div className="border-b border-[#0a2e1d]/20 pb-3 mb-4 flex items-center justify-between">
             <h3 className="text-xl font-bold font-serif uppercase tracking-tight">Create Crew</h3>
             <button
+              type="button"
               onClick={() => setView('landing')}
               className="text-xs font-bold font-mono uppercase text-[#ff007f] hover:underline"
             >
@@ -417,12 +453,100 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
               />
             </div>
 
+            {/* Creator Profile Section */}
+            <div className="border-t border-[#0a2e1d]/20 pt-4 mt-4 space-y-4">
+              <span className="text-[10px] font-bold text-[#ff007f] font-mono tracking-widest block uppercase">✦ Member #1 Profile (Creator)</span>
+              
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider font-vt">Your Photo *</label>
+                {createForm.creatorPhoto ? (
+                  <div className="relative w-20 h-20 border-2 border-[#0a2e1d] rounded overflow-hidden mb-1 group">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={createForm.creatorPhoto} alt="Creator Photo Preview" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setCreateForm(prev => ({ ...prev, creatorPhoto: '' }))}
+                      className="absolute inset-0 bg-black/65 text-white text-[9px] font-black opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
+                    >
+                      CHANGE
+                    </button>
+                  </div>
+                ) : (
+                  <PhotoUpload onPhotoSelected={(url) => setCreateForm(prev => ({ ...prev, creatorPhoto: url }))} />
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Your Name *</label>
+                  <input
+                    type="text"
+                    placeholder="Your full name"
+                    required
+                    value={createForm.creatorName}
+                    onChange={(e) => setCreateForm({ ...createForm, creatorName: e.target.value })}
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Twitter/X Handle</label>
+                  <input
+                    type="text"
+                    placeholder="@yourhandle"
+                    value={createForm.creatorTwitter}
+                    onChange={(e) => setCreateForm({ ...createForm, creatorTwitter: e.target.value })}
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Primary Stack *</label>
+                  <select
+                    value={createForm.creatorStack}
+                    required
+                    onChange={(e) => setCreateForm({ ...createForm, creatorStack: e.target.value })}
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs text-[#0a2e1d]"
+                  >
+                    <option value="">Select your stack</option>
+                    <option value="React/Frontend">React / Frontend</option>
+                    <option value="Node/Backend">Node / Backend</option>
+                    <option value="Python/AI/ML">Python / AI</option>
+                    <option value="Solidity/Web3">Solidity / Web3</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="AWS/DevOps">DevOps</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Role *</label>
+                  <select
+                    value={createForm.creatorRole}
+                    required
+                    onChange={(e) => setCreateForm({ ...createForm, creatorRole: e.target.value })}
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs text-[#0a2e1d]"
+                  >
+                    <option value="">Select your role</option>
+                    <option value="Developer">Developer</option>
+                    <option value="Designer">Designer</option>
+                    <option value="Architect">Architect</option>
+                    <option value="Hacker">Hacker</option>
+                    <option value="Wizard">Wizard</option>
+                    <option value="Maker">Maker</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {error && <p className="text-xs text-[#ff007f] font-mono mt-2">{error}</p>}
+
             <button
               type="submit"
-              disabled={loading || !createForm.name}
+              disabled={loading || !createForm.name || !createForm.creatorName || !createForm.creatorRole || !createForm.creatorStack || !createForm.creatorPhoto}
               className="retro-button-yellow w-full py-3.5 mt-2"
             >
-              {loading ? 'CREATING...' : 'CREATE CREW'}
+              {loading ? 'CREATING...' : 'CREATE CREW →'}
             </button>
           </form>
         </div>
@@ -455,9 +579,14 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
           {/* Share Invitation links Card */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 p-5 border-3 border-[#0a2e1d] bg-[#faf8f0] space-y-4 shadow-[4px_4px_0px_0px_#0a2e1d]">
-              <span className="text-[10px] font-bold text-[#ff007f] font-mono tracking-widest block uppercase">✦ Invite Members (Max 3)</span>
-              <p className="text-xs text-[#0a2e1d]/80 font-mono leading-relaxed">
-                Copy the invite link or share the crew code with your teammates so they can join the pass.
+              <span className="text-[10px] font-bold text-[#ff007f] font-mono tracking-widest block uppercase">✦ Bring Your Build Partners</span>
+              <p className="text-xs text-[#0a2e1d]/85 font-mono leading-relaxed">
+                {crew.members.length === 1 
+                  ? "Invite up to two more builders to complete your crew."
+                  : crew.members.length === 2 
+                    ? "Invite one more builder to complete your crew."
+                    : "Your crew is complete and locked!"
+                }
               </p>
               
               <div className="flex flex-col sm:flex-row gap-3">
@@ -496,8 +625,8 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-[#faf8f0]/10 pb-2">
               <h3 className="text-xl font-bold font-serif text-[#faf8f0] uppercase tracking-tight">Crew Members</h3>
-              <span className="text-xs font-mono text-[#faf8f0]/70">
-                {crew.members.length === 3 ? 'CREW COMPLETE ✓ ' : ''} {crew.members.length} / 3 Builders
+              <span className={`text-xs font-mono font-bold uppercase tracking-wider ${crew.members.length === 3 ? 'text-[#ff007f]' : 'text-[#faf8f0]/70'}`}>
+                {crew.members.length === 3 ? 'CREW COMPLETE ✓ ' : ''} 0{crew.members.length} / 03 BUILDERS
               </span>
             </div>
 
@@ -538,18 +667,19 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
                 </div>
               ))}
 
-              {/* Waiting Placeholder Slots */}
-              {Array.from({ length: Math.max(0, 3 - crew.members.length) }).map((_, i) => (
+              {/* Waiting Placeholder Slot (Only show 1 slot if crew is not full!) */}
+              {crew.members.length < 3 && (
                 <div
-                  key={i}
                   onClick={() => setView('join')}
-                  className="border-3 border-dashed border-[#faf8f0]/30 hover:border-[#faf8f0]/75 hover:bg-[#faf8f0]/5 text-[#faf8f0]/40 hover:text-[#faf8f0] transition-all flex flex-col items-center justify-center min-h-[300px] text-center cursor-pointer p-6"
+                  className="border-3 border-dashed border-[#faf8f0]/30 hover:border-[#faf8f0]/75 hover:bg-[#faf8f0]/5 text-[#faf8f0]/40 hover:text-[#faf8f0] transition-all flex flex-col items-center justify-center min-h-[300px] text-center cursor-pointer p-6 shadow-[3px_3px_0px_0px_#faf8f0]/10"
                 >
                   <span className="text-3xl font-serif text-[#faf8f0]/20 mb-2">+</span>
                   <span className="text-xs font-bold font-serif uppercase tracking-wider block">Add Builder</span>
-                  <span className="text-[10px] font-mono text-slate-500 mt-1 block">Slot open for teammate</span>
+                  <span className="text-[10px] font-mono text-slate-500 mt-1 block">
+                    {crew.members.length === 1 ? 'Add up to 2 more builders' : 'Add 1 more builder'}
+                  </span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -560,16 +690,16 @@ export default function CrewWorkspace({ initialCode }: CrewWorkspaceProps) {
                 <h4 className="text-lg font-black font-serif uppercase leading-none">
                   {crew.members.length === 3 ? 'Crew Complete! ✓' : 'Your Crew has started!'}
                 </h4>
-                <p className="text-xs font-mono text-[#0a2e1d]/80 mt-1">
-                  Assigned class: <span className="font-extrabold">{crew.generatedClass}</span>
+                <p className="text-xs font-mono text-[#0a2e1d]/85 mt-1">
+                  {crew.members.length === 3 ? 'Three builders. One identity.' : 'Invite partners or compile cards now.'}
                 </p>
               </div>
               <button
                 onClick={handleGenerate}
                 disabled={loading}
-                className="retro-button-pink py-3.5 px-6 shrink-0 font-vt uppercase tracking-wider font-extrabold"
+                className="retro-button-yellow py-3.5 px-6 shrink-0 font-vt uppercase tracking-wider font-extrabold"
               >
-                GENERATE CREW BADGES
+                CREATE CREW PASS →
               </button>
             </div>
           ) : (
