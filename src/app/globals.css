@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b4f30;
+  --foreground: #faf8f0;
+}
+
+@theme {
+  --color-goa-green: #0b4f30;
+  --color-goa-dark: #0a2e1d;
+  --color-goa-cream: #faf8f0;
+  --color-goa-yellow: #fadb14;
+  --color-goa-pink: #ff007f;
+  --font-serif: var(--font-serif);
+  --font-vt: var(--font-vt323);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-serif), system-ui, sans-serif;
+  overflow-x: hidden;
+  background-image: radial-gradient(rgba(250, 248, 240, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Retro Neo-brutalist styling */
+.retro-card {
+  background-color: #faf8f0;
+  color: #0b4f30;
+  border: 3px solid #0a2e1d;
+  box-shadow: 6px 6px 0px 0px #0a2e1d;
+}
+
+.retro-button-yellow {
+  background-color: #fadb14;
+  color: #0b4f30;
+  border: 3px solid #0a2e1d;
+  box-shadow: 4px 4px 0px 0px #0a2e1d;
+  font-weight: 800;
+  font-family: var(--font-vt323), monospace;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  transition: all 0.1s ease-out;
+  cursor: pointer;
+}
+
+.retro-button-yellow:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #0a2e1d;
+}
+
+.retro-button-yellow:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #0a2e1d;
+}
+
+.retro-button-pink {
+  background-color: #ff007f;
+  color: #faf8f0;
+  border: 3px solid #0a2e1d;
+  box-shadow: 4px 4px 0px 0px #0a2e1d;
+  font-weight: 800;
+  font-family: var(--font-vt323), monospace;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  transition: all 0.1s ease-out;
+  cursor: pointer;
+}
+
+.retro-button-pink:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #0a2e1d;
+}
+
+.retro-button-pink:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #0a2e1d;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
