@@ -514,13 +514,35 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
     const builderPlural = crew.members.length === 1 ? 'builder' : 'builders';
     const caption = `Meet ${crew.name} — a crew of ${crew.members.length} ${builderPlural} heading to HH Goa 2026.\n\n${crew.generatedClass} is ready! 🌴\n\n#FrameInGoa`;
 
+    // 1. Optional mobile native Web Share API enhancement
+    const filename = `${crew.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-crew.png`;
+    if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch(activeImage);
+        const blob = await response.blob();
+        const file = new File([blob], filename, { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `HH Goa 2026 Crew Pass`,
+            text: caption,
+          });
+          setSharing(false);
+          return;
+        }
+      } catch (e) {
+        console.warn('Native mobile share failed or was cancelled, falling back to upload-to-X flow:', e);
+      }
+    }
+
+    // 2. Desktop/Standard upload and share flow
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           image: activeImage,
-          filename: `${crew.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-crew.png`,
+          filename,
         }),
       });
 
@@ -534,18 +556,11 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
         const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}&url=${encodeURIComponent(pageUrl)}`;
         window.open(xUrl, '_blank', 'noopener,noreferrer');
       } else {
-        await navigator.clipboard.writeText(caption);
-        setCopiedLink(true);
-        setTimeout(() => setCopiedLink(false), 3000);
-        setError('Storage token missing. Opening X share intent; copy caption and attach image manually.');
-        
-        const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}`;
-        window.open(xUrl, '_blank', 'noopener,noreferrer');
+        setError('Unable to create the shareable image right now. Please download the crew pass instead.');
       }
     } catch (err: unknown) {
       console.error('Sharing crew poster failed:', err);
-      const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}`;
-      window.open(xUrl, '_blank', 'noopener,noreferrer');
+      setError('Unable to create the shareable image right now. Please download the crew pass instead.');
     } finally {
       setSharing(false);
     }

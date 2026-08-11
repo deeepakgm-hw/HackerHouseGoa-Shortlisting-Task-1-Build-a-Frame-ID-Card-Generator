@@ -44,6 +44,27 @@ export default function ResultView({
 
     const caption = `Framed for HH Goa 2026! 🚀\n\nBuilding, shipping, and showing up in Goa.\n\n#FrameInGoa`;
 
+    // 1. Optional mobile native Web Share API enhancement
+    if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch(imageDataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], getFilename(), { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `HH Goa 2026 ${isCard ? 'Pass' : 'Frame'}`,
+            text: caption,
+          });
+          setSharing(false);
+          return;
+        }
+      } catch (e) {
+        console.warn('Native mobile share failed or was cancelled, falling back to upload-to-X flow:', e);
+      }
+    }
+
+    // 2. Desktop/Standard flow via Vercel Blob upload and Tweet Intent
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -66,21 +87,12 @@ export default function ResultView({
         const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}&url=${encodeURIComponent(pageUrl)}`;
         window.open(xUrl, '_blank', 'noopener,noreferrer');
       } else {
-        await navigator.clipboard.writeText(caption);
-        setCopiedText(true);
-        setTimeout(() => setCopiedText(false), 3000);
-
-        setError('Vercel Blob token is missing. Sharing via direct tweet text, please download and attach your badge manually.');
-        
-        const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}`;
-        window.open(xUrl, '_blank', 'noopener,noreferrer');
+        // Return clear UI error instead of silently degrading
+        setError(`Unable to create the shareable image right now. Please download the ${isCard ? 'pass' : 'frame'} instead.`);
       }
     } catch (err: unknown) {
       console.error('Sharing failed:', err);
-      setError('Could not generate share URL. Sharing via direct tweet text, please download and attach your badge manually.');
-      
-      const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}`;
-      window.open(xUrl, '_blank', 'noopener,noreferrer');
+      setError(`Unable to create the shareable image right now. Please download the ${isCard ? 'pass' : 'frame'} instead.`);
     } finally {
       setSharing(false);
     }
