@@ -34,7 +34,7 @@ const localCrews: Record<string, Crew> = {};
 
 // Helper to determine if Vercel Blob is available
 const isBlobAvailable = () => {
-  return !!process.env.BLOB_READ_WRITE_TOKEN;
+  return !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL || process.env.VERCEL_BLOB_STORE_ID);
 };
 
 // Generates a random crew code (e.g. GOA-K9X2)

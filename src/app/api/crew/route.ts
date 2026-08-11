@@ -46,7 +46,7 @@ export async function POST(request: Request) {
         let finalPhotoUrl = creatorPhoto;
         
         // Upload photo to Vercel Blob if configured
-        if (process.env.BLOB_READ_WRITE_TOKEN && creatorPhoto.startsWith('data:image/')) {
+        if ((process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL) && creatorPhoto.startsWith('data:image/')) {
           try {
             const base64Data = creatorPhoto.split(',')[1];
             const buffer = Buffer.from(base64Data, 'base64');
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
       let finalPhotoUrl = photo;
       
       // Upload member photo to Vercel Blob if configured and photo is base64
-      if (process.env.BLOB_READ_WRITE_TOKEN && photo.startsWith('data:image/')) {
+      if ((process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL) && photo.startsWith('data:image/')) {
         try {
           const base64Data = photo.split(',')[1];
           const buffer = Buffer.from(base64Data, 'base64');

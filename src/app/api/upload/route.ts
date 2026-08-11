@@ -33,8 +33,8 @@ export async function POST(request: Request) {
     }
 
     // Check if token is available
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      console.warn('BLOB_READ_WRITE_TOKEN is not configured. Saving generated assets is disabled.');
+    if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.VERCEL) {
+      console.warn('BLOB_READ_WRITE_TOKEN is not configured and not running on Vercel. Saving generated assets is disabled.');
       return NextResponse.json({
         success: false,
         error: 'BLOB_READ_WRITE_TOKEN is missing',
