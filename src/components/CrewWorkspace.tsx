@@ -346,14 +346,14 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       {view === 'landing' && (
         <div className="space-y-6 animate-fadeIn">
           <div className="text-center max-w-xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-[10px] font-mono tracking-wider">
-              ⚡ NEW FEATURE // MULTI-BUILDER ⚡
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] font-caption tracking-wider uppercase">
+              ✦ NEW FEATURE // MULTI-BUILDER ✦
             </div>
-            <h2 className="text-3xl md:text-5xl font-black font-serif text-[#faf8f0] uppercase tracking-tight leading-none">
+            <h2 className="font-display-lg text-[#faf8f0] uppercase tracking-tight">
               BUILD TOGETHER.<br/>
               <span className="text-[#fadb14]">SHOW UP TOGETHER.</span>
             </h2>
-            <p className="text-[#faf8f0]/85 text-sm font-mono max-w-md mx-auto">
+            <p className="text-[#faf8f0]/85 font-body-md max-w-md mx-auto leading-relaxed">
               Bring your teammates into one combined frame. Create an official HH Goa 2026 collective poster.
             </p>
           </div>
@@ -363,15 +363,16 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             {/* Create Crew Card */}
             <div className="p-6 border-3 border-[#0a2e1d] bg-[#faf8f0] flex flex-col justify-between gap-4 shadow-[4px_4px_0px_0px_#0a2e1d]">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold text-[#ff007f] font-mono">✦ INITIATE</span>
+                <span className="font-label-md text-[#ff007f] block uppercase">✦ INITIATE</span>
                 <h3 className="text-xl font-bold font-serif uppercase tracking-tight">Create a Crew</h3>
-                <p className="text-xs text-[#0a2e1d]/75 font-mono">
+                <p className="font-body-sm text-[#0a2e1d]/85 leading-relaxed">
                   Set up a collective board, invite your teammates via link, and assign your crew class.
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setView('create')}
-                className="retro-button-yellow w-full py-3 text-center"
+                className="retro-button-yellow w-full py-3.5 text-center font-label-lg uppercase cursor-pointer"
               >
                 CREATE YOUR CREW
               </button>
@@ -380,9 +381,9 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             {/* Join Crew Card */}
             <div className="p-6 border-3 border-[#0a2e1d] bg-[#faf8f0] flex flex-col justify-between gap-4 shadow-[4px_4px_0px_0px_#0a2e1d]">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold text-[#ff007f] font-mono">✦ COLLABORATE</span>
+                <span className="font-label-md text-[#ff007f] block uppercase">✦ COLLABORATE</span>
                 <h3 className="text-xl font-bold font-serif uppercase tracking-tight">Enter Crew Code</h3>
-                <p className="text-xs text-[#0a2e1d]/75 font-mono">
+                <p className="font-body-sm text-[#0a2e1d]/85 leading-relaxed">
                   Already invited? Enter the 4-digit code to add your pass card to the collective.
                 </p>
               </div>
@@ -392,12 +393,13 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                   placeholder="e.g. K9X2"
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
-                  className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg px-3 outline-none text-xs"
+                  className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg px-3 py-2 outline-none text-base placeholder-[#0b4f30]/40"
                 />
                 <button
+                  type="button"
                   onClick={() => fetchCrew(code)}
                   disabled={loading || !code}
-                  className="retro-button-pink px-5 py-2.5 shrink-0"
+                  className="retro-button-pink px-5 py-2.5 shrink-0 font-label-lg uppercase cursor-pointer"
                 >
                   JOIN
                 </button>
@@ -406,7 +408,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
           </div>
           
           {error && (
-            <div className="max-w-md mx-auto p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] text-[#ff007f] text-xs font-mono shadow-[2px_2px_0px_0px_#0a2e1d]">
+            <div className="max-w-md mx-auto p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] text-[#ff007f] text-sm font-mono shadow-[2px_2px_0px_0px_#0a2e1d] font-bold">
               {error}
             </div>
           )}
@@ -417,11 +419,11 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       {view === 'create' && (
         <div className="max-w-md mx-auto animate-fadeIn bg-[#faf8f0] border-3 border-[#0a2e1d] p-6 shadow-[6px_6px_0px_0px_#0a2e1d]">
           <div className="border-b border-[#0a2e1d]/20 pb-3 mb-4 flex items-center justify-between">
-            <h3 className="text-xl font-bold font-serif uppercase tracking-tight">Create Crew</h3>
+            <h3 className="text-xl font-bold font-serif uppercase tracking-tight text-[#0b4f30]">Create Crew</h3>
             <button
               type="button"
               onClick={() => setView('landing')}
-              className="text-xs font-bold font-mono uppercase text-[#ff007f] hover:underline"
+              className="font-label-md uppercase text-[#ff007f] hover:underline"
             >
               Cancel
             </button>
@@ -429,7 +431,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
 
           <form onSubmit={handleCreateCrew} className="space-y-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider font-vt">Crew Name *</label>
+              <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Crew Name *</label>
               <input
                 type="text"
                 placeholder="e.g. Midnight Builders"
@@ -437,28 +439,28 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                 value={createForm.name}
                 onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                 maxLength={30}
-                className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2.5 px-3 outline-none text-xs"
+                className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider font-vt">Crew Tagline</label>
+              <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Crew Tagline</label>
               <input
                 type="text"
                 placeholder="e.g. We ship after midnight."
                 value={createForm.tagline}
                 onChange={(e) => setCreateForm({ ...createForm, tagline: e.target.value })}
                 maxLength={50}
-                className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2.5 px-3 outline-none text-xs"
+                className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
               />
             </div>
 
             {/* Creator Profile Section */}
             <div className="border-t border-[#0a2e1d]/20 pt-4 mt-4 space-y-4">
-              <span className="text-[10px] font-bold text-[#ff007f] font-mono tracking-widest block uppercase">✦ Member #1 Profile (Creator)</span>
+              <span className="font-label-lg text-[#ff007f] block uppercase">✦ Member #1 Profile (Creator)</span>
               
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider font-vt">Your Photo *</label>
+                <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Your Photo *</label>
                 {createForm.creatorPhoto ? (
                   <div className="relative w-20 h-20 border-2 border-[#0a2e1d] rounded overflow-hidden mb-1 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -466,7 +468,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                     <button
                       type="button"
                       onClick={() => setCreateForm(prev => ({ ...prev, creatorPhoto: '' }))}
-                      className="absolute inset-0 bg-black/65 text-white text-[9px] font-black opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
+                      className="absolute inset-0 bg-black/65 text-white font-caption font-bold opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
                     >
                       CHANGE
                     </button>
@@ -476,37 +478,37 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[#0b4f30]">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Your Name *</label>
+                  <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Your Name *</label>
                   <input
                     type="text"
                     placeholder="Your full name"
                     required
                     value={createForm.creatorName}
                     onChange={(e) => setCreateForm({ ...createForm, creatorName: e.target.value })}
-                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Twitter/X Handle</label>
+                  <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Twitter/X Handle</label>
                   <input
                     type="text"
                     placeholder="@yourhandle"
                     value={createForm.creatorTwitter}
                     onChange={(e) => setCreateForm({ ...createForm, creatorTwitter: e.target.value })}
-                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Primary Stack *</label>
+                  <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Primary Stack *</label>
                   <select
                     value={createForm.creatorStack}
                     required
                     onChange={(e) => setCreateForm({ ...createForm, creatorStack: e.target.value })}
-                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs text-[#0a2e1d]"
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base text-[#0a2e1d]"
                   >
                     <option value="">Select your stack</option>
                     <option value="React/Frontend">React / Frontend</option>
@@ -520,12 +522,12 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Role *</label>
+                  <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Role *</label>
                   <select
                     value={createForm.creatorRole}
                     required
                     onChange={(e) => setCreateForm({ ...createForm, creatorRole: e.target.value })}
-                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs text-[#0a2e1d]"
+                    className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base text-[#0a2e1d]"
                   >
                     <option value="">Select your role</option>
                     <option value="Developer">Developer</option>
@@ -539,14 +541,14 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
               </div>
             </div>
 
-            {error && <p className="text-xs text-[#ff007f] font-mono mt-2">{error}</p>}
+            {error && <p className="text-sm font-mono text-[#ff007f] font-bold mt-2">{error}</p>}
 
             <button
               type="submit"
               disabled={loading || !createForm.name || !createForm.creatorName || !createForm.creatorRole || !createForm.creatorStack || !createForm.creatorPhoto}
-              className="retro-button-yellow w-full py-3.5 mt-2"
+              className="retro-button-yellow w-full py-4 mt-2 font-label-lg uppercase cursor-pointer"
             >
-              {loading ? 'CREATING...' : 'CREATE CREW →'}
+              {loading ? 'ASSEMBLING THE CREW...' : 'CREATE CREW →'}
             </button>
           </form>
         </div>
@@ -557,19 +559,20 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
         <div className="space-y-8 animate-fadeIn w-full px-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-[#faf8f0]/10 pb-4">
             <div>
-              <div className="inline-flex items-center gap-1 text-[10px] text-[#fadb14] font-bold font-mono tracking-widest uppercase">
+              <div className="text-base md:text-lg font-bold font-mono text-[#fadb14] block uppercase mb-1">
                 ✦ Crew Code: {crew.code}
               </div>
-              <h2 className="text-3xl font-black font-serif text-[#faf8f0] uppercase tracking-tight">
+              <h2 className="font-heading-lg text-[#faf8f0] uppercase leading-none">
                 {crew.name}
               </h2>
-              {crew.tagline && <p className="text-xs text-[#faf8f0]/80 font-mono italic mt-0.5">&ldquo;{crew.tagline}&rdquo;</p>}
+              {crew.tagline && <p className="font-body-md text-[#faf8f0]/85 mt-2 font-sans italic">&ldquo;{crew.tagline}&rdquo;</p>}
             </div>
 
             <div className="flex items-center gap-3">
               <button
+                type="button"
                 onClick={() => setView('landing')}
-                className="px-4 py-2 border-2 border-[#0a2e1d] bg-[#faf8f0] hover:bg-[#ff007f] hover:text-[#faf8f0] text-xs font-bold font-mono transition-colors shadow-[2px_2px_0px_0px_#0a2e1d] cursor-pointer"
+                className="px-4 py-2.5 border-2 border-[#0a2e1d] bg-[#faf8f0] hover:bg-[#ff007f] hover:text-[#faf8f0] font-label-md transition-colors shadow-[2px_2px_0px_0px_#0a2e1d] cursor-pointer"
               >
                 LEAVE WORKSPACE
               </button>
@@ -579,8 +582,8 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
           {/* Share Invitation links Card */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 p-5 border-3 border-[#0a2e1d] bg-[#faf8f0] space-y-4 shadow-[4px_4px_0px_0px_#0a2e1d]">
-              <span className="text-[10px] font-bold text-[#ff007f] font-mono tracking-widest block uppercase">✦ Bring Your Build Partners</span>
-              <p className="text-xs text-[#0a2e1d]/85 font-mono leading-relaxed">
+              <span className="font-label-lg text-[#ff007f] block uppercase">✦ Bring Your Build Partners</span>
+              <p className="font-body-md text-[#0a2e1d]/85 leading-relaxed">
                 {crew.members.length === 1 
                   ? "Invite up to two more builders to complete your crew."
                   : crew.members.length === 2 
@@ -591,17 +594,18 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
               
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Invite link input copy */}
-                <div className="flex-1 flex items-center justify-between border-2 border-[#0a2e1d] bg-white rounded-lg px-3 py-2 truncate text-xs font-mono">
+                <div className="flex-1 flex items-center justify-between border-2 border-[#0a2e1d] bg-white rounded-lg px-3 py-2 truncate text-sm font-mono text-[#0a2e1d]">
                   <span className="truncate select-all mr-2">{inviteLinkUrl}</span>
-                  <button onClick={copyInviteLink} className="text-[#0b4f30] hover:text-[#ff007f] cursor-pointer">
+                  <button type="button" onClick={copyInviteLink} className="text-[#0b4f30] hover:text-[#ff007f] cursor-pointer">
                     {copiedLink ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
                 
                 {/* Code Copy */}
                 <button
+                  type="button"
                   onClick={copyCrewCode}
-                  className="retro-button-yellow px-4 py-2 flex items-center gap-1.5 shrink-0 justify-center text-xs"
+                  className="retro-button-yellow px-4 py-2.5 flex items-center gap-1.5 shrink-0 justify-center font-label-md"
                 >
                   {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Clipboard className="w-3.5 h-3.5" />}
                   COPY CODE ({crew.code})
@@ -617,15 +621,15 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                 alt="Crew Join QR Code"
                 className="w-24 h-24 border-2 border-[#0a2e1d] p-1 bg-white mb-2"
               />
-              <span className="text-[9px] font-bold font-mono text-[#0a2e1d]/70 uppercase">Scan to join crew</span>
+              <span className="font-caption text-[#0a2e1d]/75 uppercase">Scan to join crew</span>
             </div>
           </div>
 
           {/* Members List Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-[#faf8f0]/10 pb-2">
-              <h3 className="text-xl font-bold font-serif text-[#faf8f0] uppercase tracking-tight">Crew Members</h3>
-              <span className={`text-xs font-mono font-bold uppercase tracking-wider ${crew.members.length === 3 ? 'text-[#ff007f]' : 'text-[#faf8f0]/70'}`}>
+              <h3 className="text-2xl md:text-3xl font-black font-serif text-[#faf8f0] uppercase tracking-tight">Crew Members</h3>
+              <span className={`text-sm sm:text-base font-bold font-mono uppercase tracking-wider ${crew.members.length === 3 ? 'text-[#ff007f]' : 'text-[#faf8f0]'}`}>
                 {crew.members.length === 3 ? 'CREW COMPLETE ✓ ' : ''} 0{crew.members.length} / 03 BUILDERS
               </span>
             </div>
@@ -642,6 +646,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                     {/* Owner deletion button */}
                     {ownerToken && (
                       <button
+                        type="button"
                         onClick={() => handleRemoveMember(m.id)}
                         className="absolute top-2.5 right-2.5 p-1.5 bg-[#ff007f] border-2 border-[#0a2e1d] text-white hover:bg-red-750 transition-colors shadow-[2px_2px_0px_0px_#0a2e1d] cursor-pointer"
                         title="Remove member"
@@ -652,14 +657,14 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                   </div>
 
                   {/* Member details info */}
-                  <div className="p-4 space-y-1 bg-[#faf8f0]">
-                    <span className="text-[8px] font-bold text-[#ff007f] font-mono tracking-widest uppercase">{m.xHandle || '@HACKER'}</span>
-                    <h4 className="text-base font-extrabold uppercase font-serif text-[#0b4f30] truncate">{m.name}</h4>
-                    <p className="text-[10px] font-mono text-[#0a2e1d]/75 truncate">{m.role.toUpperCase()} // {m.stack.toUpperCase()}</p>
+                  <div className="p-4 space-y-1.5 bg-[#faf8f0]">
+                    <span className="font-caption text-[#ff007f] uppercase font-bold tracking-wider block">{m.xHandle || '@HACKER'}</span>
+                    <h4 className="text-xl md:text-2xl font-serif text-[#0b4f30] font-black uppercase truncate">{m.name}</h4>
+                    <p className="text-[14px] font-mono text-[#0a2e1d]/85 font-bold uppercase truncate">{m.role} // {m.stack}</p>
                     
                     {/* Assigned Title */}
-                    <div className="pt-2">
-                      <span className="inline-block px-2 py-0.5 bg-[#fadb14] text-[#0b4f30] border border-[#0a2e1d] text-[9px] font-extrabold font-mono tracking-tight rounded">
+                    <div className="pt-1.5">
+                      <span className="inline-block px-2.5 py-1 bg-[#fadb14] text-[#0b4f30] border border-[#0a2e1d] font-caption font-bold uppercase rounded">
                         {m.builderTitle}
                       </span>
                     </div>
@@ -732,13 +737,13 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             <>
               <div className="border-b border-[#0a2e1d]/20 pb-3 mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold font-serif uppercase tracking-tight">Join Crew</h3>
-                  <p className="text-[10px] font-mono text-slate-500 mt-0.5">Crew: {crew.name} ({crew.members.length}/3 Builders)</p>
+                  <h3 className="text-xl font-bold font-serif uppercase tracking-tight text-[#0b4f30]">Join Crew</h3>
+                  <p className="font-caption text-slate-500 mt-0.5">Crew: {crew.name} ({crew.members.length}/3 Builders)</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setView('dashboard')}
-                  className="text-xs font-bold font-mono uppercase text-[#ff007f] hover:underline"
+                  className="font-label-md uppercase text-[#ff007f] hover:underline cursor-pointer"
                 >
                   Back
                 </button>
@@ -747,41 +752,41 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
               <form onSubmit={handleJoinCrew} className="space-y-4">
                 {/* Photo upload zone */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider font-vt">Member Photo *</label>
+                  <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Member Photo *</label>
                   <PhotoUpload onPhotoSelected={(url) => setJoinForm({ ...joinForm, photo: url })} />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[#0b4f30]">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider font-vt">Full Name *</label>
+                    <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Full Name *</label>
                     <input
                       type="text"
                       placeholder="e.g. Ananya"
                       required
                       value={joinForm.name}
                       onChange={(e) => setJoinForm({ ...joinForm, name: e.target.value })}
-                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider font-vt">Twitter/X Handle</label>
+                    <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Twitter/X Handle</label>
                     <input
                       type="text"
                       placeholder="e.g. @ananya"
                       value={joinForm.xHandle}
                       onChange={(e) => setJoinForm({ ...joinForm, xHandle: e.target.value })}
-                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base placeholder-[#0b4f30]/40"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider font-vt">Primary Stack *</label>
+                    <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Primary Stack *</label>
                     <select
                       value={joinForm.stack}
                       required
                       onChange={(e) => setJoinForm({ ...joinForm, stack: e.target.value })}
-                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base"
                     >
                       <option value="">Select Stack</option>
                       <option value="React/Frontend">React / Frontend</option>
@@ -795,12 +800,12 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider font-vt">Role *</label>
+                    <label className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Role *</label>
                     <select
                       value={joinForm.role}
                       required
                       onChange={(e) => setJoinForm({ ...joinForm, role: e.target.value })}
-                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-mono rounded-lg py-2 px-3 outline-none text-xs"
+                      className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] font-sans font-medium rounded-lg py-2.5 px-3 outline-none text-base"
                     >
                       <option value="">Select Role</option>
                       <option value="Developer">Developer</option>
@@ -813,14 +818,14 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                   </div>
                 </div>
 
-                {error && <p className="text-xs text-[#ff007f] font-mono">{error}</p>}
+                {error && <p className="text-sm font-mono text-[#ff007f] font-bold">{error}</p>}
 
                 <button
                   type="submit"
                   disabled={loading || !joinForm.photo || !joinForm.name || !joinForm.stack || !joinForm.role}
-                  className="retro-button-yellow w-full py-3.5 mt-2"
+                  className="retro-button-yellow w-full py-4 mt-2 font-label-lg uppercase cursor-pointer"
                 >
-                  {loading ? 'JOINING...' : 'JOIN CREW'}
+                  {loading ? 'JOINING THE CREW...' : 'JOIN CREW →'}
                 </button>
               </form>
             </>
@@ -832,26 +837,26 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       {view === 'result' && crew && (
         <div className="w-full max-w-xl mx-auto space-y-6 animate-fadeIn text-[#0b4f30]">
           <div className="text-center text-[#faf8f0]">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-[10px] font-mono tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] font-caption tracking-wider mb-3 uppercase">
               ✦ COLLECTIVE LOCK COMPLETED ✦
             </div>
-            <h2 className="text-3xl md:text-5xl font-black font-serif uppercase tracking-tight leading-none mb-2">
+            <h2 className="font-display-lg text-[#faf8f0] uppercase tracking-tight mb-2">
               YOUR CREW IS<br/>
               <span className="text-[#fadb14] drop-shadow-md">GOA READY.</span>
             </h2>
-            <p className="text-xs font-mono max-w-xs mx-auto">
+            <p className="text-[#faf8f0]/85 font-body-md max-w-xs mx-auto leading-relaxed">
               Generated shared cards and campaign posters. Ready for download.
             </p>
           </div>
 
           {/* Toggle selector between card, poster and pfp */}
-          <div className="flex border-3 border-[#0a2e1d] bg-[#faf8f0] p-1.5 shadow-[3px_3px_0px_0px_#0a2e1d] max-w-md mx-auto">
+          <div className="flex border-3 border-[#0a2e1d] bg-[#faf8f0] p-1.5 shadow-[3px_3px_0px_0px_#0a2e1d] max-w-md mx-auto w-full">
             <button
               type="button"
               onClick={() => setActiveResultType('card')}
-              className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
+              className={`flex-1 py-2 text-center font-label-lg uppercase cursor-pointer border-2 transition-all ${
                 activeResultType === 'card'
-                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30]'
+                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[1px_1px_0px_0px_#0a2e1d] translate-y-[-0.5px]'
                   : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
               }`}
             >
@@ -860,9 +865,9 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             <button
               type="button"
               onClick={() => setActiveResultType('poster')}
-              className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
+              className={`flex-1 py-2 text-center font-label-lg uppercase cursor-pointer border-2 transition-all ${
                 activeResultType === 'poster'
-                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30]'
+                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[1px_1px_0px_0px_#0a2e1d] translate-y-[-0.5px]'
                   : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
               }`}
             >
@@ -871,9 +876,9 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             <button
               type="button"
               onClick={() => setActiveResultType('pfp')}
-              className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
+              className={`flex-1 py-2 text-center font-label-lg uppercase cursor-pointer border-2 transition-all ${
                 activeResultType === 'pfp'
-                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30]'
+                  ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[1px_1px_0px_0px_#0a2e1d] translate-y-[-0.5px]'
                   : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
               }`}
             >
@@ -897,7 +902,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
 
           {/* Warning state */}
           {error && (
-            <div className="p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-start gap-3 text-[#ff007f] text-xs font-mono shadow-[3px_3px_0px_0px_#0a2e1d]">
+            <div className="p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-start gap-3 text-[#ff007f] text-sm font-mono shadow-[3px_3px_0px_0px_#0a2e1d] font-bold">
               <span>{error}</span>
             </div>
           )}
@@ -905,16 +910,17 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
           {/* Share links */}
           {shareUrl && (
             <div className="p-4 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-center justify-between gap-3 shadow-[3px_3px_0px_0px_#0a2e1d]">
-              <div className="truncate text-xs text-[#0a2e1d]/75 font-mono select-all">
+              <div className="truncate text-sm text-[#0a2e1d]/75 font-mono select-all">
                 {shareUrl}
               </div>
               <button
+                type="button"
                 onClick={() => {
                   navigator.clipboard.writeText(shareUrl);
                   setCopiedLink(true);
                   setTimeout(() => setCopiedLink(false), 2000);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-[#0a2e1d] hover:bg-[#ff007f] hover:text-[#faf8f0] text-xs font-bold font-mono transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-[#0a2e1d] hover:bg-[#ff007f] hover:text-[#faf8f0] font-label-md transition-colors cursor-pointer"
               >
                 {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 Copy URL
@@ -925,27 +931,29 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
           {/* CTAs */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
+              type="button"
               onClick={handleDownload}
-              className="retro-button-yellow py-3.5 px-6 flex items-center justify-center gap-2"
+              className="retro-button-yellow py-3.5 px-6 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Download className="w-4.5 h-4.5" />
-              DOWNLOAD {activeResultType.toUpperCase()}
+              <span className="font-label-lg text-base tracking-wider">DOWNLOAD {activeResultType.toUpperCase()}</span>
             </button>
 
             <button
+              type="button"
               onClick={handleShareToX}
               disabled={sharing}
-              className="retro-button-pink py-3.5 px-6 flex items-center justify-center gap-2 disabled:opacity-75"
+              className="retro-button-pink py-3.5 px-6 flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
             >
               {sharing ? (
                 <>
                   <Loader2 className="w-4.5 h-4.5 animate-spin" />
-                  POSTING...
+                  <span className="font-label-lg text-base tracking-wider">POSTING...</span>
                 </>
               ) : (
                 <>
                   <Share2 className="w-4.5 h-4.5" />
-                  SHARE TO X
+                  <span className="font-label-lg text-base tracking-wider">SHARE TO X</span>
                 </>
               )}
             </button>
@@ -954,14 +962,16 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
           {/* Back actions */}
           <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#faf8f0]/10">
             <button
+              type="button"
               onClick={() => setView('dashboard')}
-              className="text-xs font-black uppercase font-vt text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="font-label-lg text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> EDIT MEMBERS
             </button>
             <button
+              type="button"
               onClick={handleRestart}
-              className="text-xs font-black uppercase font-vt text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="font-label-lg text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" /> CREATE NEW CREW
             </button>

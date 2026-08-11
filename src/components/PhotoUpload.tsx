@@ -90,14 +90,14 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto">
+    <div className="w-full max-w-[720px] mx-auto">
       <div
         onDragEnter={handleDrag}
         onDragOver={handleDrag}
         onDragLeave={handleDrag}
         onDrop={handleDrop}
         onClick={onButtonClick}
-        className={`relative border-3 border-dashed rounded-2xl p-8 md:p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[260px] group ${
+        className={`relative border-3 border-dashed rounded-2xl p-8 md:p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[300px] group ${
           isDragActive
             ? 'border-[#ff007f] bg-[#ff007f]/10 scale-[1.01] shadow-[6px_6px_0px_0px_#0a2e1d]'
             : 'border-[#0a2e1d] bg-[#faf8f0] hover:bg-[#faf8f0]/95 hover:shadow-[6px_6px_0px_0px_#0a2e1d]'
@@ -115,8 +115,8 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
         {loading ? (
           <div className="flex flex-col items-center gap-4 animate-pulse text-[#0b4f30]">
             <Loader2 className="w-12 h-12 text-[#ff007f] animate-spin" />
-            <p className="text-[#0b4f30] text-base font-bold font-serif uppercase tracking-tight">Processing your photo...</p>
-            <p className="text-slate-500 text-xs font-mono">Converting HEIC formats.</p>
+            <p className="font-heading-md text-[#0b4f30] uppercase">Processing your photo...</p>
+            <p className="font-body-sm text-[#0b4f30]/70 font-mono">Converting HEIC formats.</p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-4 text-[#0b4f30]">
@@ -126,15 +126,15 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-black uppercase font-serif tracking-tight">
+              <h3 className="font-heading-md text-[#0b4f30] uppercase">
                 UPLOAD YOUR BUILDER PHOTO
               </h3>
               
-              <p className="text-slate-500 text-xs font-mono max-w-xs mx-auto">
+              <p className="font-body-md text-[#0b4f30]/80 font-sans max-w-xs mx-auto">
                 Drag & drop or choose from your device
               </p>
               
-              <div className="flex items-center justify-center gap-1.5 pt-2 text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider">
+              <div className="flex items-center justify-center gap-1.5 pt-2 font-caption text-[#0b4f30]/60 font-bold uppercase tracking-wider">
                 <span>PNG</span>
                 <span>·</span>
                 <span>JPG</span>

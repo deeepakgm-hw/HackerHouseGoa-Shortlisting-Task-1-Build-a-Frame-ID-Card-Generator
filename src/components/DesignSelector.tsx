@@ -26,7 +26,7 @@ export default function DesignSelector({
     <div className="w-full space-y-6 bg-[#faf8f0] p-6 border-3 border-[#0a2e1d] shadow-[4px_4px_0px_0px_#0a2e1d] text-[#0b4f30]">
       {/* Format Selectors */}
       <div className="space-y-3">
-        <label className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt block border-b border-[#0a2e1d]/20 pb-1">
+        <label className="font-label-lg text-[#0a2e1d] block border-b border-[#0a2e1d]/20 pb-1.5 uppercase">
           ✦ Select Badge Format
         </label>
         <div className="grid grid-cols-2 gap-4">
@@ -41,8 +41,8 @@ export default function DesignSelector({
           >
             <User className="w-6 h-6 shrink-0" />
             <div>
-              <span className="block text-xs font-black uppercase tracking-wider font-vt">PFP Overlay</span>
-              <span className="block text-[9px] text-[#0a2e1d]/70 mt-0.5">Avatar frame overlay</span>
+              <span className="block font-label-lg uppercase text-[#0b4f30]">PFP Overlay</span>
+              <span className="block font-caption text-[#0a2e1d]/75 mt-0.5 font-sans">Avatar frame overlay</span>
             </div>
           </button>
 
@@ -57,8 +57,8 @@ export default function DesignSelector({
           >
             <Award className="w-6 h-6 shrink-0" />
             <div>
-              <span className="block text-xs font-black uppercase tracking-wider font-vt">Builder Card</span>
-              <span className="block text-[9px] hover:text-[#faf8f0]/80 mt-0.5">Official pass card</span>
+              <span className={`block font-label-lg uppercase ${isCard ? 'text-[#faf8f0]' : 'text-[#0b4f30]'}`}>Builder Pass</span>
+              <span className={`block font-caption mt-0.5 font-sans ${isCard ? 'text-[#faf8f0]/85' : 'text-[#0a2e1d]/75'}`}>Official pass card</span>
             </div>
           </button>
         </div>
@@ -66,7 +66,7 @@ export default function DesignSelector({
 
       {/* Style Variation Selector */}
       <div className="space-y-3">
-        <label className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt block border-b border-[#0a2e1d]/20 pb-1">
+        <label className="font-label-lg text-[#0a2e1d] block border-b border-[#0a2e1d]/20 pb-1.5 uppercase">
           ✦ Select Art Theme
         </label>
         <div className="grid grid-cols-3 gap-3">
@@ -75,13 +75,13 @@ export default function DesignSelector({
               key={v.name}
               type="button"
               onClick={() => setVariantIndex(idx)}
-              className={`flex flex-col items-center justify-center p-3 border-2 transition-all text-center cursor-pointer outline-none text-xs font-black uppercase font-vt ${
+              className={`flex flex-col items-center justify-center p-3 border-2 transition-all text-center cursor-pointer outline-none font-label-lg uppercase ${
                 variantIndex === idx
                   ? 'border-[#0a2e1d] bg-[#fadb14] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-x-[-1px] translate-y-[-1px]'
                   : 'border-[#0a2e1d]/30 bg-[#faf8f0] hover:border-[#0a2e1d] text-[#0b4f30]/70 hover:text-[#0b4f30]'
               }`}
             >
-              <span className="block text-[11px] tracking-tight">{v.name}</span>
+              <span className="block tracking-tight">{v.name}</span>
             </button>
           ))}
         </div>

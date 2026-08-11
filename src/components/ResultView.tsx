@@ -98,14 +98,14 @@ export default function ResultView({
     <div className="w-full max-w-xl mx-auto space-y-6 animate-fadeIn text-[#0b4f30]">
       {/* Dynamic reveal title */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-[10px] font-mono tracking-wider mb-3">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] font-caption tracking-wider mb-3 uppercase">
           ✦ COMPOSITION LOCKED ✦
         </div>
-        <h2 className="text-3xl md:text-5xl font-black font-serif uppercase tracking-tight text-[#faf8f0] mb-2 leading-tight">
+        <h2 className="font-display-lg text-[#faf8f0] uppercase tracking-tight mb-2">
           YOUR BUILD IS<br/>
           <span className="text-[#fadb14] drop-shadow-md">GOA READY.</span>
         </h2>
-        <p className="text-[#faf8f0]/85 text-xs font-mono max-w-xs mx-auto">
+        <p className="text-[#faf8f0]/85 font-body-md max-w-xs mx-auto leading-relaxed">
           Pass generated successfully. Download and share to the hacker wall.
         </p>
       </div>
@@ -122,7 +122,7 @@ export default function ResultView({
 
       {/* Status messages */}
       {error && (
-        <div className="p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-start gap-3 text-[#ff007f] text-xs font-mono shadow-[3px_3px_0px_0px_#0a2e1d]">
+        <div className="p-3.5 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-start gap-3 text-[#ff007f] text-sm font-mono shadow-[3px_3px_0px_0px_#0a2e1d] font-bold">
           <AlertCircle className="w-4.5 h-4.5 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -131,12 +131,13 @@ export default function ResultView({
       {/* Sharing link */}
       {shareUrl && (
         <div className="p-4 border-2 border-[#0a2e1d] bg-[#faf8f0] flex items-center justify-between gap-3 shadow-[3px_3px_0px_0px_#0a2e1d]">
-          <div className="truncate text-xs text-[#0a2e1d]/75 font-mono select-all">
+          <div className="truncate text-sm text-[#0a2e1d]/75 font-mono select-all">
             {shareUrl}
           </div>
           <button
+            type="button"
             onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#0a2e1d] hover:bg-[#ff007f] hover:text-[#faf8f0] text-xs font-bold font-mono transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#0a2e1d] hover:bg-[#ff007f] hover:text-[#faf8f0] font-label-md transition-colors cursor-pointer"
           >
             {copiedText ? (
               <>
@@ -154,27 +155,29 @@ export default function ResultView({
       {/* CTAs styled as retro poster buttons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
+          type="button"
           onClick={handleDownload}
-          className="retro-button-yellow py-3.5 px-6 flex items-center justify-center gap-2"
+          className="retro-button-yellow py-3.5 px-6 flex items-center justify-center gap-2 cursor-pointer"
         >
           <Download className="w-4.5 h-4.5" />
-          DOWNLOAD BADGE
+          <span className="font-label-lg text-base tracking-wider uppercase">DOWNLOAD {isCard ? 'PASS' : 'FRAME'}</span>
         </button>
 
         <button
+          type="button"
           onClick={handleShareToX}
           disabled={sharing}
-          className="retro-button-pink py-3.5 px-6 flex items-center justify-center gap-2 disabled:opacity-75"
+          className="retro-button-pink py-3.5 px-6 flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
         >
           {sharing ? (
             <>
               <Loader2 className="w-4.5 h-4.5 animate-spin" />
-              POSTING LINK...
+              <span className="font-label-lg text-base tracking-wider">POSTING LINK...</span>
             </>
           ) : (
             <>
               <Share2 className="w-4.5 h-4.5" />
-              SHARE TO X
+              <span className="font-label-lg text-base tracking-wider">SHARE TO X</span>
             </>
           )}
         </button>
@@ -184,15 +187,17 @@ export default function ResultView({
       <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#faf8f0]/10">
         {isCard && (
           <button
+            type="button"
             onClick={onEditDetails}
-            className="text-xs font-black uppercase font-vt text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="font-label-lg text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Edit className="w-3.5 h-3.5" /> EDIT DETAILS
           </button>
         )}
         <button
+          type="button"
           onClick={onRestart}
-          className="text-xs font-black uppercase font-vt text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
+          className="font-label-lg text-[#faf8f0] hover:text-[#fadb14] transition-colors flex items-center gap-1.5 cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" /> CREATE ANOTHER
         </button>

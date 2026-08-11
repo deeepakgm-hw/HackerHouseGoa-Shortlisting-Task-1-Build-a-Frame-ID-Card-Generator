@@ -96,10 +96,10 @@ export default function CropAdjuster({
   return (
     <div className="flex flex-col items-center gap-6 w-full max-w-lg mx-auto text-[#0b4f30]">
       <div className="text-center space-y-1.5">
-        <h3 className="text-2xl md:text-3xl font-black uppercase font-serif tracking-tight text-[#faf8f0] leading-none">
+        <h3 className="font-heading-lg text-[#faf8f0] uppercase">
           FRAME YOUR BUILD.
         </h3>
-        <p className="text-xs text-[#faf8f0]/80 font-mono">
+        <p className="font-body-md text-[#faf8f0]/85 font-sans leading-relaxed">
           Drag your photo to position it inside the frame. Use scale slider to fit.
         </p>
       </div>
@@ -129,10 +129,10 @@ export default function CropAdjuster({
       {/* Control sliders */}
       <div className="w-full px-4 flex flex-col gap-4 bg-[#faf8f0] p-5 border-3 border-[#0a2e1d] shadow-[4px_4px_0px_0px_#0a2e1d]">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-black uppercase font-vt text-[#0a2e1d] flex items-center gap-2">
+          <span className="font-label-lg text-[#0a2e1d] flex items-center gap-2">
             <ZoomIn className="w-4 h-4 text-[#ff007f]" /> Scale Image
           </span>
-          <span className="text-xs text-[#0a2e1d]/85 font-vt">{settings.zoom.toFixed(1)}x</span>
+          <span className="font-label-lg text-[#0a2e1d]/85">{settings.zoom.toFixed(1)}x</span>
         </div>
         <div className="flex items-center gap-4">
           <input

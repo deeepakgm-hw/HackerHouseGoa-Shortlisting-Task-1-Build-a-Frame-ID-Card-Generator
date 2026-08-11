@@ -35,7 +35,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Name */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">Full Name</label>
+          <label htmlFor="name" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Full Name</label>
           <input
             id="name"
             type="text"
@@ -43,18 +43,18 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             value={details.name}
             onChange={handleInputChange('name')}
             maxLength={25}
-            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white focus:ring-2 focus:ring-[#fadb14] text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white focus:ring-2 focus:ring-[#fadb14] text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base placeholder-[#0b4f30]/40"
           />
         </div>
 
         {/* Stack Dropdown */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="stack" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">Primary Stack</label>
+          <label htmlFor="stack" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Primary Stack</label>
           <select
             id="stack"
             value={details.stack}
             onChange={handleInputChange('stack')}
-            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base"
           >
             <option value="">Select your stack</option>
             {STACKS.map(st => (
@@ -67,25 +67,25 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
         {/* Custom Stack */}
         {details.stack === 'custom' && (
           <div className="flex flex-col gap-1.5 animate-fadeIn">
-            <label htmlFor="custom-stack" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">Specify Stack</label>
+            <label htmlFor="custom-stack" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Specify Stack</label>
             <input
               id="custom-stack"
               type="text"
               placeholder="e.g. C++ / Web Assembly"
               onChange={(e) => updateField('stack', e.target.value)}
-              className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+              className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base placeholder-[#0b4f30]/40"
             />
           </div>
         )}
 
         {/* Role Dropdown */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="role" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">Your Role</label>
+          <label htmlFor="role" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Your Role</label>
           <select
             id="role"
             value={details.role}
             onChange={handleInputChange('role')}
-            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base"
           >
             <option value="">Select your role</option>
             {ROLES.map(rl => (
@@ -96,7 +96,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
 
         {/* Location */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="location" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">Location (Optional)</label>
+          <label htmlFor="location" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Location (Optional)</label>
           <input
             id="location"
             type="text"
@@ -104,13 +104,13 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             value={details.location}
             onChange={handleInputChange('location')}
             maxLength={20}
-            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base placeholder-[#0b4f30]/40"
           />
         </div>
 
         {/* Handle */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="handle" className="text-xs font-bold uppercase tracking-wider text-[#0a2e1d] font-vt">X/Twitter Handle (Optional)</label>
+          <label htmlFor="handle" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">X/Twitter Handle (Optional)</label>
           <input
             id="handle"
             type="text"
@@ -118,7 +118,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             value={details.twitter}
             onChange={handleInputChange('twitter')}
             maxLength={20}
-            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-mono rounded-lg py-2.5 px-3 outline-none transition-all text-xs"
+            className="w-full bg-[#faf8f0] border-2 border-[#0a2e1d] focus:bg-white text-[#0b4f30] font-sans font-medium rounded-lg py-2.5 px-3 outline-none transition-all text-base placeholder-[#0b4f30]/40"
           />
         </div>
       </div>

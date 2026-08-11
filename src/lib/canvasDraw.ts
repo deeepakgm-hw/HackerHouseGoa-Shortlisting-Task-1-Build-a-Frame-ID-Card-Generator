@@ -386,17 +386,37 @@ export function drawBuilderCard(
   ctx.lineWidth = 4;
   ctx.strokeRect(38, 38, w - 76, 136);
 
-  // Header Title
-  ctx.font = 'bold 76px serif';
+  // Official Logo Drawing: "HACKER HOUSE" with overlapping Devanagari "गोवा" badge
+  ctx.font = 'bold 54px serif';
   ctx.fillStyle = yellow;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('HACKER HOUSE', w / 2, 90);
+  ctx.fillText('HACKER', w / 2, 68);
+  ctx.fillText('HOUSE', w / 2, 114);
 
-  ctx.font = '900 20px monospace';
-  ctx.letterSpacing = '8px';
+  ctx.save();
+  ctx.translate(w / 2, 91);
+  ctx.rotate(-0.08);
+  ctx.fillStyle = pink;
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 3.5;
+  const logoBadgeW = 96;
+  const logoBadgeH = 38;
+  ctx.beginPath();
+  ctx.roundRect(-logoBadgeW / 2, -logoBadgeH / 2, logoBadgeW, logoBadgeH, 12);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillStyle = yellow;
+  ctx.fillText('गोवा', 0, 0);
+  ctx.restore();
+
+  // Draw event dates at the bottom of header box
+  ctx.font = '900 13px monospace';
+  ctx.letterSpacing = '4px';
   ctx.fillStyle = cream;
-  ctx.fillText('GOA, INDIA ✦ OCT 28-31, 2026', w / 2, 140);
+  ctx.fillText('OCT 28-31, 2026', w / 2, 150);
 
   // 3. Profile Photo with Editorial Offset Framing
   const photoSize = 450;
@@ -758,17 +778,36 @@ export function drawCrewCard(
   ctx.lineWidth = 3;
   ctx.strokeRect(30, 30, w - 60, 110);
 
-  // Header Title
-  ctx.font = 'bold 56px serif';
+  // Official Logo Layout
+  ctx.font = 'bold 46px serif';
   ctx.fillStyle = yellow;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('HACKER HOUSE', w / 2, 70);
+  ctx.fillText('HACKER', w / 2, 56);
+  ctx.fillText('HOUSE', w / 2, 96);
 
-  ctx.font = '900 15px monospace';
-  ctx.letterSpacing = '6px';
+  ctx.save();
+  ctx.translate(w / 2, 76);
+  ctx.rotate(-0.08);
+  ctx.fillStyle = pink;
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 3;
+  const ccBadgeW = 76;
+  const ccBadgeH = 30;
+  ctx.beginPath();
+  ctx.roundRect(-ccBadgeW / 2, -ccBadgeH / 2, ccBadgeW, ccBadgeH, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 18px sans-serif';
+  ctx.fillStyle = yellow;
+  ctx.fillText('गोवा', 0, 0);
+  ctx.restore();
+
+  ctx.font = '900 12px monospace';
+  ctx.letterSpacing = '4px';
   ctx.fillStyle = cream;
-  ctx.fillText('GOA, INDIA ✦ OCT 2026', w / 2, 115);
+  ctx.fillText('OCTOBER 2026', w / 2, 122);
 
   // 3. Crew Metadata Details
   const detailsY = 165;
@@ -938,17 +977,36 @@ export function drawCrewPoster(
   drawPalmTree(ctx, 110, 420, 1.2, dark);
   drawPalmTree(ctx, w - 110, 420, 1.2, dark);
 
-  // 2. Poster Typography Headers
-  ctx.font = 'bold 84px serif';
-  ctx.fillStyle = cream;
+  // 2. Poster Typography Headers (Official Logo Style on Green Background)
+  ctx.font = 'bold 54px serif';
+  ctx.fillStyle = yellow;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('HACKER HOUSE', w / 2, 90);
+  ctx.fillText('HACKER', w / 2, 68);
+  ctx.fillText('HOUSE', w / 2, 114);
 
-  ctx.font = '900 18px monospace';
-  ctx.letterSpacing = '8px';
+  ctx.save();
+  ctx.translate(w / 2, 91);
+  ctx.rotate(-0.08);
+  ctx.fillStyle = pink;
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 3.5;
+  const pBadgeW = 96;
+  const pBadgeH = 38;
+  ctx.beginPath();
+  ctx.roundRect(-pBadgeW / 2, -pBadgeH / 2, pBadgeW, pBadgeH, 12);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 22px sans-serif';
   ctx.fillStyle = yellow;
-  ctx.fillText('GOA, INDIA ✦ OCT 2026', w / 2, 150);
+  ctx.fillText('गोवा', 0, 0);
+  ctx.restore();
+
+  ctx.font = '900 13px monospace';
+  ctx.letterSpacing = '4px';
+  ctx.fillStyle = cream;
+  ctx.fillText('OCTOBER 28 - 31, 2026', w / 2, 150);
 
   // Crew name banner
   ctx.font = 'bold 54px serif';

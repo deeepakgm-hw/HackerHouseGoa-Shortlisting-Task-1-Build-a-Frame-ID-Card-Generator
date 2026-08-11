@@ -99,71 +99,106 @@ export default function Generator() {
   const isCard = activeTab === 'pass';
 
   return (
-    <div className="w-full font-sans select-none">
-      {/* 1. Main Tab Navigation Header */}
-      <div className="flex border-3 border-[#0a2e1d] bg-[#faf8f0] p-1.5 shadow-[4px_4px_0px_0px_#0a2e1d] max-w-lg mx-auto mb-8 text-[#0b4f30]">
-        <button
-          onClick={() => { setActiveTab('frame'); setStep('upload'); }}
-          className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
-            activeTab === 'frame'
-              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
-              : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
-          }`}
-        >
-          MY FRAME
-        </button>
-        <button
-          onClick={() => { setActiveTab('pass'); setStep('upload'); }}
-          className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all ${
-            activeTab === 'pass'
-              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
-              : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
-          }`}
-        >
-          BUILDER PASS
-        </button>
-        <button
-          onClick={() => { setActiveTab('crew'); }}
-          className={`flex-1 py-2 text-center text-xs font-black uppercase font-vt cursor-pointer border-2 transition-all relative ${
-            activeTab === 'crew'
-              ? 'bg-[#fadb14] border-[#0a2e1d] text-[#0b4f30] shadow-[2px_2px_0px_0px_#0a2e1d] translate-y-[-1px]'
-              : 'bg-transparent border-transparent text-[#0b4f30]/60 hover:text-[#0b4f30]'
-          }`}
-        >
-          CREW MODE ✦
-        </button>
-      </div>
+    <div className="w-full font-sans select-none flex flex-col items-center">
+      {/* 1. Main Tab Navigation Header Section (Full-Width Viewport-Wide Band with 3 Individual Cards) */}
+      <section className="w-full border-t-3 border-b-3 border-[#0a2e1d] bg-[#0b4f30] py-6 md:py-8 z-20">
+        <div className="w-full max-w-[1300px] mx-auto px-6 overflow-x-auto scrollbar-none py-1">
+          <div className="grid grid-cols-3 gap-4 md:gap-6 min-w-[600px] sm:min-w-0">
+            {/* Button 1: MY FRAME */}
+            <button
+              type="button"
+              onClick={() => { setActiveTab('frame'); setStep('upload'); }}
+              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+                activeTab === 'frame'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+              }`}
+            >
+              {activeTab === 'frame' && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+              )}
+              <span className="text-sm md:text-[17px] flex items-center justify-center">
+                <span className="hidden sm:inline">MY FRAME</span>
+                <span className="sm:hidden">FRAME</span>
+                <span className="text-[#0a2e1d]/50 font-mono text-[12px] ml-1.5">⌖</span>
+              </span>
+            </button>
+
+            {/* Button 2: BUILDER PASS */}
+            <button
+              type="button"
+              onClick={() => { setActiveTab('pass'); setStep('upload'); }}
+              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+                activeTab === 'pass'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+              }`}
+            >
+              {activeTab === 'pass' && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+              )}
+              <span className="text-sm md:text-[17px] flex items-center justify-center">
+                <span className="hidden sm:inline">BUILDER PASS</span>
+                <span className="sm:hidden">PASS</span>
+                <span className="text-[#ff007f] text-[12px] ml-1.5">★</span>
+              </span>
+            </button>
+
+            {/* Button 3: CREW MODE */}
+            <button
+              type="button"
+              onClick={() => { setActiveTab('crew'); }}
+              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+                activeTab === 'crew'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+              }`}
+            >
+              {activeTab === 'crew' && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+              )}
+              <span className="text-sm md:text-[17px] flex items-center justify-center">
+                <span className="hidden sm:inline">CREW MODE</span>
+                <span className="sm:hidden">CREW</span>
+                <span className="text-[#ff007f] text-[14px] ml-1.5">✦</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* RENDER CREW WORKSPACE */}
       {activeTab === 'crew' ? (
-        <CrewWorkspace
-          initialCode={initialCrewCode}
-          defaultDetails={details}
-          defaultPhotoUrl={photoUrl || undefined}
-        />
+        <div className="w-full max-w-[1200px] mx-auto px-6 py-8 md:py-12">
+          <CrewWorkspace
+            initialCode={initialCrewCode}
+            defaultDetails={details}
+            defaultPhotoUrl={photoUrl || undefined}
+          />
+        </div>
       ) : (
         /* RENDER INDIVIDUAL BUILDER WORKSPACE */
-        <>
+        <div className="w-full max-w-[850px] mx-auto px-6 py-8 md:py-12 space-y-6 flex flex-col items-center">
           {/* Refined Step Progress Header in Retro style */}
-          <div className="max-w-xs mx-auto mb-6 text-center">
-            <div className="flex items-center justify-between text-xs font-black uppercase font-vt tracking-widest mb-2 px-1">
-              <span className={
+          <div className="w-full max-w-[480px] mx-auto mb-8 text-center">
+            <div className="w-full flex items-center text-xs md:text-sm font-bold tracking-wider mb-2.5 text-[#faf8f0]/50">
+              <span className={`w-[33.333%] text-center ${
                 step === 'upload' ? 'text-[#fadb14]' : 
-                (step === 'adjust' || step === 'result') ? 'text-[#faf8f0]/40 font-mono line-through' : 'text-[#faf8f0]/60'
-              }>
+                (step === 'adjust' || step === 'result') ? 'text-[#faf8f0]/30 line-through' : ''
+              }`}>
                 {step !== 'upload' ? '1. UPLOAD ✓' : '1. UPLOAD'}
               </span>
-              <span className={
+              <span className={`w-[33.333%] text-center ${
                 step === 'adjust' ? 'text-[#fadb14]' : 
-                step === 'result' ? 'text-[#faf8f0]/40 font-mono line-through' : 'text-[#faf8f0]/60'
-              }>
+                step === 'result' ? 'text-[#faf8f0]/30 line-through' : ''
+              }`}>
                 {step === 'result' ? '2. CUSTOMIZE ✓' : '2. CUSTOMIZE'}
               </span>
-              <span className={step === 'result' ? 'text-[#fadb14]' : 'text-[#faf8f0]/40'}>
+              <span className={`w-[33.333%] text-center ${step === 'result' ? 'text-[#fadb14]' : ''}`}>
                 3. EXPORT
               </span>
             </div>
-            <div className="w-full h-1 bg-[#0a2e1d] rounded-full overflow-hidden flex">
+            <div className="w-full h-[5px] bg-[#0a2e1d] rounded-full overflow-hidden flex">
               <div
                 className="h-full bg-[#fadb14] transition-all duration-500 ease-out"
                 style={{
@@ -175,15 +210,15 @@ export default function Generator() {
 
           {/* Main Switcher */}
           {step === 'upload' && (
-            <div className="space-y-5">
-              <div className="text-center max-w-2xl mx-auto mb-4 space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-[10px] font-mono tracking-wider uppercase">
+            <div className="space-y-4">
+              <div className="text-center max-w-2xl mx-auto mb-3 space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/25 text-[#ff007f] text-xs sm:text-[13px] font-mono tracking-wider uppercase">
                   ✦ HH GOA BUILDER HOUSE 2026 ✦
                 </div>
-                <h2 className="text-3xl md:text-5xl font-black font-serif text-white tracking-tight leading-tight uppercase">
+                <h2 className="text-4xl md:text-5xl font-black font-serif text-white tracking-tight leading-tight uppercase">
                   {activeTab === 'frame' ? 'FRAME YOUR BUILD.' : 'CREATE YOUR PASS.'}
                 </h2>
-                <p className="text-[#faf8f0]/85 text-xs leading-relaxed max-w-xs sm:max-w-md mx-auto font-mono">
+                <p className="text-[#faf8f0]/85 text-sm sm:text-base font-sans font-medium max-w-md mx-auto leading-relaxed">
                   {activeTab === 'frame'
                     ? 'Create your HH Goa 2026 identity frame for your profile.'
                     : 'Design your personalized hackathon builder pass with custom stack labels.'}
@@ -196,14 +231,14 @@ export default function Generator() {
               <div className="max-w-xl mx-auto pt-8 border-t border-[#faf8f0]/10 text-center animate-fadeIn">
                 <div className="p-5 border-3 border-[#0a2e1d] bg-[#faf8f0] text-[#0b4f30] text-center shadow-[4px_4px_0px_0px_#0a2e1d] max-w-md mx-auto space-y-3">
                   <h4 className="text-base font-black font-serif uppercase leading-none">BUILD TOGETHER?</h4>
-                  <p className="text-xs font-mono text-[#0a2e1d]/75">
+                  <p className="font-body-md text-[#0a2e1d]/85 leading-relaxed">
                     Your individual pass is only the start. Team up with your squad and build a collective Goa poster pass.
                   </p>
                   <button
                     onClick={() => setActiveTab('crew')}
-                    className="retro-button-pink py-2 px-4 text-xs font-bold"
+                    className="retro-button-pink py-2.5 px-6 font-label-lg uppercase cursor-pointer"
                   >
-                    LAUNCH CREW STUDIO ⚡
+                    LAUNCH CREW STUDIO →
                   </button>
                 </div>
               </div>
@@ -215,12 +250,13 @@ export default function Generator() {
               {/* Back Action Row */}
               <div className="flex items-center justify-between max-w-5xl mx-auto w-full px-4 border-b border-[#faf8f0]/10 pb-3">
                 <button
+                  type="button"
                   onClick={() => setStep('upload')}
-                  className="text-xs font-black uppercase font-vt text-[#faf8f0] hover:text-[#fadb14] flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="font-label-lg text-[#faf8f0] hover:text-[#fadb14] flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" /> Back to Upload
                 </button>
-                <span className="text-xs text-[#faf8f0]/60 font-mono">Configuring Badge</span>
+                <span className="font-caption text-[#faf8f0]/60">Configuring Badge</span>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start max-w-5xl mx-auto w-full px-4">
@@ -250,11 +286,12 @@ export default function Generator() {
                   {/* Generate Button */}
                   <div className="pt-2">
                     {isCard && (!details.name.trim() || !details.stack || !details.role) && (
-                      <p className="text-xs text-[#ff007f] font-bold font-mono text-center mb-2.5 uppercase tracking-wider">
+                      <p className="text-[13px] font-bold font-mono text-[#ff007f] text-center mb-2.5 uppercase tracking-wider">
                         ✦ Enter name, stack & role to unlock pass ✦
                       </p>
                     )}
                     <button
+                      type="button"
                       onClick={handleGenerate}
                       disabled={generating || (isCard && (!details.name.trim() || !details.stack || !details.role))}
                       className={`w-full py-4 px-6 flex items-center justify-center gap-2 group transition-all ${
@@ -266,12 +303,16 @@ export default function Generator() {
                       {generating ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
-                          <span>{isCard ? 'GENERATING YOUR PASS...' : 'FRAMING YOUR BUILD...'}</span>
+                          <span className="font-label-lg text-base tracking-wider">
+                            {isCard ? 'GENERATING YOUR PASS...' : 'FRAMING YOUR BUILD...'}
+                          </span>
                         </>
                       ) : (
                         <>
                           <Sparkles className="w-5 h-5" />
-                          <span>{isCard ? 'CREATE MY BUILDER PASS →' : 'CREATE MY FRAME →'}</span>
+                          <span className="font-label-lg text-base tracking-wider">
+                            {isCard ? 'CREATE MY BUILDER PASS →' : 'CREATE MY FRAME →'}
+                          </span>
                         </>
                       )}
                     </button>
@@ -290,7 +331,7 @@ export default function Generator() {
               onRestart={handleRestart}
             />
           )}
-        </>
+        </div>
       )}
     </div>
   );
