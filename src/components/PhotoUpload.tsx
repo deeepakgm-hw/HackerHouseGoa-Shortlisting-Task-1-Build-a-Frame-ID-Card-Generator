@@ -13,6 +13,62 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const compressAndResizeImage = (file: File, maxDim = 1200, quality = 0.85): Promise<{ base64: string; file: File }> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve({ base64: event.target?.result as string, file });
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          
+          // Convert dataUrl back to a File object
+          try {
+            const arr = dataUrl.split(',');
+            const mimeMatch = arr[0].match(/:(.*?);/);
+            const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            const compressedFile = new File([u8arr], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: mime });
+            resolve({ base64: dataUrl, file: compressedFile });
+          } catch (e) {
+            resolve({ base64: dataUrl, file });
+          }
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
   const processFile = async (file: File) => {
     setError(null);
     setLoading(true);
@@ -28,6 +84,8 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
     }
 
     try {
+      let targetFile = file;
+
       if (isHeic) {
         const heic2any = (await import('heic2any')).default;
         const converted = await heic2any({
@@ -37,16 +95,15 @@ export default function PhotoUpload({ onPhotoSelected }: PhotoUploadProps) {
         });
 
         const blob = Array.isArray(converted) ? converted[0] : converted;
-        const convertedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+        targetFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
           type: 'image/jpeg',
           lastModified: Date.now(),
         });
-        
-        const url = URL.createObjectURL(blob);
-        onPhotoSelected(url, convertedFile);
-      } else if (file.type.startsWith('image/')) {
-        const url = URL.createObjectURL(file);
-        onPhotoSelected(url, file);
+      }
+
+      if (targetFile.type.startsWith('image/')) {
+        const { base64, file: compressedFile } = await compressAndResizeImage(targetFile);
+        onPhotoSelected(base64, compressedFile);
       } else {
         setError('Try a PNG, JPG or HEIC photo.');
       }

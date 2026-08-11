@@ -42,7 +42,7 @@ export default function Generator() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      const crewCode = params.get('crew');
+      const crewCode = params.get('crew') || params.get('join');
       if (crewCode) {
         setActiveTab('crew');
         setInitialCrewCode(crewCode);

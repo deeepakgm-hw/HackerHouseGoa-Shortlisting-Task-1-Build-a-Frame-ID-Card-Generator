@@ -135,7 +135,12 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       const data = await res.json();
       if (data.success) {
         setCrew(data.crew);
-        setView('dashboard');
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('join') === crewCode && data.crew.members.length < 3) {
+          setView('join');
+        } else {
+          setView('dashboard');
+        }
       } else {
         setError(data.error || 'Failed to find crew.');
       }
