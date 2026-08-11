@@ -326,8 +326,8 @@ export function drawPfpFrame(
 
   // 2. Avatar Center Positions
   const avatarX = w / 2;
-  const avatarY = 440;
-  const avatarR = 270;
+  const avatarY = 410;
+  const avatarR = 240;
 
   // Segmented "BUILDER SIGNAL" Arcs
   ctx.save();
@@ -434,7 +434,7 @@ export function drawPfpFrame(
     // Goa Sunset: Pink & Yellow stickers
     // Top-Left "HH GOA" badge
     ctx.save();
-    ctx.translate(avatarX - 190, avatarY - 190);
+    ctx.translate(avatarX - 170, avatarY - 170);
     ctx.rotate(-0.06);
     ctx.fillStyle = pink;
     ctx.beginPath(); ctx.roundRect(-55, -20, 110, 40, 6); ctx.fill();
@@ -444,7 +444,7 @@ export function drawPfpFrame(
 
     // Top-Right "2026" badge
     ctx.save();
-    ctx.translate(avatarX + 190, avatarY - 190);
+    ctx.translate(avatarX + 170, avatarY - 170);
     ctx.rotate(0.06);
     ctx.fillStyle = yellow;
     ctx.beginPath(); ctx.roundRect(-45, -20, 90, 40, 6); ctx.fill();
@@ -456,7 +456,7 @@ export function drawPfpFrame(
     // Retro Green: Cream & Green badges
     // Top-Left "BUILDER" badge
     ctx.save();
-    ctx.translate(avatarX - 190, avatarY - 190);
+    ctx.translate(avatarX - 170, avatarY - 170);
     ctx.rotate(-0.04);
     ctx.fillStyle = cream;
     ctx.beginPath(); ctx.roundRect(-55, -20, 110, 40, 4); ctx.fill();
@@ -466,7 +466,7 @@ export function drawPfpFrame(
 
     // Top-Right "GOA '26" badge
     ctx.save();
-    ctx.translate(avatarX + 190, avatarY - 190);
+    ctx.translate(avatarX + 170, avatarY - 170);
     ctx.rotate(0.04);
     ctx.fillStyle = dark;
     ctx.beginPath(); ctx.roundRect(-50, -20, 100, 40, 4); ctx.fill();
@@ -478,7 +478,7 @@ export function drawPfpFrame(
     // Hacker Stamp: Pink & Dark warning label badges
     // Top-Left "VERIFIED" stamp badge
     ctx.save();
-    ctx.translate(avatarX - 190, avatarY - 190);
+    ctx.translate(avatarX - 170, avatarY - 170);
     ctx.rotate(-0.08);
     ctx.fillStyle = dark;
     ctx.beginPath(); ctx.roundRect(-60, -20, 120, 40, 2); ctx.fill();
@@ -488,7 +488,7 @@ export function drawPfpFrame(
 
     // Top-Right "HACKER" stamp badge
     ctx.save();
-    ctx.translate(avatarX + 190, avatarY - 190);
+    ctx.translate(avatarX + 170, avatarY - 170);
     ctx.rotate(0.08);
     ctx.fillStyle = pink;
     ctx.beginPath(); ctx.roundRect(-55, -20, 110, 40, 2); ctx.fill();
@@ -497,117 +497,160 @@ export function drawPfpFrame(
     ctx.restore();
   }
 
-  // 3. Compact overlapping name plate box
+  // 3. Name, Role, Stack, and Location Layout calculations
+  const hasName = !!details.name && details.name.trim().toUpperCase() !== 'YOUR NAME' && details.name.trim() !== '';
+  const hasRole = !!details.role && details.role.trim().toUpperCase() !== 'YOUR ROLE' && details.role.trim() !== '';
+  const hasStack = !!details.stack && details.stack.trim().toUpperCase() !== 'YOUR STACK' && details.stack.trim() !== '';
+  const hasLocation = !!details.location && details.location.trim().toUpperCase() !== 'GOA, INDIA' && details.location.trim() !== '';
+  const hasHandle = !!details.twitter && details.twitter.trim().toUpperCase() !== '@HANDLE' && details.twitter.trim() !== '';
+
   const plateW = 480;
   const plateH = 86;
   const plateX = w / 2 - plateW / 2;
-  const plateY = avatarY + avatarR - 60; // 650
+  const plateY = avatarY + avatarR - 50; // 600
 
-  // Shadow
-  ctx.fillStyle = dark;
-  ctx.fillRect(plateX + 8, plateY + 8, plateW, plateH);
-  ctx.strokeRect(plateX + 8, plateY + 8, plateW, plateH);
-
-  // Background and border
-  ctx.fillStyle = variantIndex === 1 ? cream : variantIndex === 2 ? yellow : cream;
-  ctx.fillRect(plateX, plateY, plateW, plateH);
-  ctx.strokeStyle = dark;
-  ctx.lineWidth = 4;
-  ctx.strokeRect(plateX, plateY, plateW, plateH);
-
-  // User Name
-  const nameText = (details.name || 'BUILDER').toUpperCase();
-  let nameSize = 42;
-  ctx.font = `900 ${nameSize}px serif`;
-  while (ctx.measureText(nameText).width > plateW - 40 && nameSize > 20) {
-    nameSize -= 2;
-    ctx.font = `900 ${nameSize}px serif`;
-  }
-  ctx.fillStyle = dark;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(nameText, w / 2, plateY + plateH / 2);
-
-  // 4. Role & Tags below name plate
-  const roleText = (details.role || 'HACKER / BUILDER').toUpperCase();
-  let roleSize = 22;
-  ctx.font = `bold ${roleSize}px monospace`;
-  while (ctx.measureText(roleText).width > w - 120 && roleSize > 14) {
-    roleSize -= 1;
-    ctx.font = `bold ${roleSize}px monospace`;
-  }
-  ctx.fillStyle = textSecondary;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(roleText, w / 2, plateY + plateH + 45); // 781
-
-  // Dynamic tags (Role, Stack, Location)
-  const tags: string[] = [];
-  if (details.role) tags.push(details.role.toUpperCase());
-  if (details.stack) tags.push(details.stack.toUpperCase());
-  if (details.location) tags.push(details.location.toUpperCase());
-  if (tags.length === 0) tags.push('BUILDER');
-
-  ctx.font = 'bold 15px monospace';
-  const tagPadd = 16;
-  const tagH = 38;
-  const tagGap = 12;
-
-  const tagWidths = tags.map((t: string) => ctx.measureText(t).width + tagPadd * 2);
-  const totalWidth = tagWidths.reduce((a: number, b: number) => a + b, 0) + tagGap * (tags.length - 1);
-
-  let startX = w / 2 - totalWidth / 2;
-  const tagY = plateY + plateH + 75; // 811
-
-  tags.forEach((t: string, idx: number) => {
-    const tagW = tagWidths[idx];
-
+  if (hasName) {
     // Shadow
     ctx.fillStyle = dark;
-    ctx.fillRect(startX + 3, tagY + 3, tagW, tagH);
-    ctx.strokeRect(startX + 3, tagY + 3, tagW, tagH);
+    ctx.fillRect(plateX + 8, plateY + 8, plateW, plateH);
+    ctx.strokeRect(plateX + 8, plateY + 8, plateW, plateH);
 
-    // Pill color
-    let tagBg = idx % 3 === 0 ? yellow : idx % 3 === 1 ? cream : pink;
-    if (variantIndex === 1) {
-      // Muted colors for Retro Green
-      tagBg = idx % 2 === 0 ? cream : yellow;
-    } else if (variantIndex === 2) {
-      // Tech colors for Hacker Stamp
-      tagBg = idx % 2 === 0 ? pink : dark;
-    }
-    
-    ctx.fillRect(startX, tagY, tagW, tagH);
+    // Background and border
+    ctx.fillStyle = variantIndex === 1 ? cream : variantIndex === 2 ? yellow : cream;
+    ctx.fillRect(plateX, plateY, plateW, plateH);
     ctx.strokeStyle = dark;
-    ctx.lineWidth = 2.5;
-    ctx.strokeRect(startX, tagY, tagW, tagH);
+    ctx.lineWidth = 4;
+    ctx.strokeRect(plateX, plateY, plateW, plateH);
 
-    // Text color
-    if (variantIndex === 2 && idx % 2 === 1) {
-      ctx.fillStyle = cream; // Cream text on dark background for hacker stamp
-    } else if (tagBg === pink) {
-      ctx.fillStyle = cream;
-    } else {
-      ctx.fillStyle = dark;
+    // User Name
+    const nameText = details.name.toUpperCase();
+    let nameSize = 42;
+    ctx.font = `900 ${nameSize}px serif`;
+    while (ctx.measureText(nameText).width > plateW - 40 && nameSize > 20) {
+      nameSize -= 2;
+      ctx.font = `900 ${nameSize}px serif`;
     }
-    
+    ctx.fillStyle = dark;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(t, startX + tagW / 2, tagY + tagH / 2);
+    ctx.fillText(nameText, w / 2, plateY + plateH / 2);
 
-    startX += tagW + tagGap;
-  });
+    let currentY = plateY + plateH + 45; // 731
 
-  // Small event location info
+    if (hasRole) {
+      const roleText = details.role.toUpperCase() + " BUILDER";
+      let roleSize = 22;
+      ctx.font = `bold ${roleSize}px monospace`;
+      while (ctx.measureText(roleText).width > w - 120 && roleSize > 14) {
+        roleSize -= 1;
+        ctx.font = `bold ${roleSize}px monospace`;
+      }
+      ctx.fillStyle = textSecondary;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(roleText, w / 2, currentY);
+      currentY += 45;
+    }
+
+    if (hasStack) {
+      const rawTags = details.stack.split(/[,•]/).map((s: string) => s.trim().toUpperCase()).filter(Boolean);
+      const tags = rawTags.slice(0, 3);
+
+      ctx.font = 'bold 15px monospace';
+      const tagPadd = 16;
+      const tagH = 38;
+      const tagGap = 12;
+
+      const tagWidths = tags.map((t: string) => ctx.measureText(t).width + tagPadd * 2);
+      const totalWidth = tagWidths.reduce((a: number, b: number) => a + b, 0) + tagGap * (tags.length - 1);
+
+      let startX = w / 2 - totalWidth / 2;
+      const tagY = currentY - 15;
+
+      tags.forEach((t: string, idx: number) => {
+        const tagW = tagWidths[idx];
+
+        ctx.fillStyle = dark;
+        ctx.fillRect(startX + 3, tagY + 3, tagW, tagH);
+        ctx.strokeRect(startX + 3, tagY + 3, tagW, tagH);
+
+        let tagBg = idx % 3 === 0 ? yellow : idx % 3 === 1 ? cream : pink;
+        if (variantIndex === 1) {
+          tagBg = idx % 2 === 0 ? cream : yellow;
+        } else if (variantIndex === 2) {
+          tagBg = idx % 2 === 0 ? pink : dark;
+        }
+
+        ctx.fillRect(startX, tagY, tagW, tagH);
+        ctx.strokeStyle = dark;
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(startX, tagY, tagW, tagH);
+
+        if (variantIndex === 2 && idx % 2 === 1) {
+          ctx.fillStyle = cream;
+        } else if (tagBg === pink) {
+          ctx.fillStyle = cream;
+        } else {
+          ctx.fillStyle = dark;
+        }
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(t, startX + tagW / 2, tagY + tagH / 2);
+
+        startX += tagW + tagGap;
+      });
+
+      currentY += 45;
+    }
+
+    if (hasLocation || hasHandle) {
+      let footerText = '';
+      if (hasLocation && hasHandle) {
+        footerText = `${(details.location || '').toUpperCase()}  ✦  ${(details.twitter || '').toLowerCase()}`;
+      } else if (hasLocation) {
+        footerText = (details.location || '').toUpperCase();
+      } else {
+        footerText = (details.twitter || '').toLowerCase();
+      }
+
+      ctx.font = '900 15px monospace';
+      ctx.fillStyle = textPrimary;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(footerText, w / 2, currentY + 10);
+    }
+  } else {
+    // If no name is provided, draw the original fallback label so the PFP is not blank
+    ctx.fillStyle = dark;
+    ctx.fillRect(plateX + 8, plateY + 8, plateW, plateH);
+    ctx.strokeRect(plateX + 8, plateY + 8, plateW, plateH);
+
+    ctx.fillStyle = variantIndex === 1 ? cream : variantIndex === 2 ? yellow : cream;
+    ctx.fillRect(plateX, plateY, plateW, plateH);
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(plateX, plateY, plateW, plateH);
+
+    ctx.font = '900 42px serif';
+    ctx.fillStyle = dark;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('BUILDER', w / 2, plateY + plateH / 2);
+  }
+
+  // Small event footer at the absolute bottom
   ctx.font = '900 13px monospace';
   ctx.fillStyle = pink;
   ctx.letterSpacing = '4px';
+  ctx.textAlign = 'center';
   if (variantIndex === 0) {
-    ctx.fillText('OCT 28-31, 2026 // GOA READY', w / 2, h - 75);
+    ctx.fillText('OCT 28-31, 2026 // GOA READY', w / 2, h - 55);
   } else if (variantIndex === 1) {
     ctx.fillStyle = green;
-    ctx.fillText('OCT 2026 // SHIPPED AT THE BEACH', w / 2, h - 75);
-  ctx.fillText('SERIAL // GOA-' + (details.twitter || '99D5').toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 5) + ' // 5/5 SHIP', w / 2, h - 75);
+    ctx.fillText('OCT 2026 // SHIPPED AT THE BEACH', w / 2, h - 55);
+  } else {
+    ctx.fillText('SERIAL // GOA-' + (details.twitter || '99D5').toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 5) + ' // 5/5 SHIP', w / 2, h - 55);
   }
 }
 

@@ -38,7 +38,7 @@ export default function Generator() {
     title: '',
   });
 
-  // Load variantIndex on mount
+  // Load variantIndex and details on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('hh-goa-variant-index');
@@ -48,8 +48,32 @@ export default function Generator() {
           setVariantIndex(idx);
         }
       }
+
+      const savedDetails = localStorage.getItem('hh-goa-builder-details');
+      if (savedDetails) {
+        try {
+          const parsed = JSON.parse(savedDetails);
+          if (parsed && typeof parsed === 'object') {
+            setDetails((prev) => ({
+              ...prev,
+              ...parsed
+            }));
+          }
+        } catch (e) {
+          console.error('Failed to parse saved builder details:', e);
+        }
+      }
     }
   }, []);
+
+  // Save details when they change
+  useEffect(() => {
+    if (typeof window !== 'undefined' && details) {
+      if (details.name || details.role || details.stack || details.location || details.twitter) {
+        localStorage.setItem('hh-goa-builder-details', JSON.stringify(details));
+      }
+    }
+  }, [details]);
 
   const handleVariantIndexChange = (idx: number) => {
     setVariantIndex(idx);
@@ -301,7 +325,7 @@ export default function Generator() {
                     setVariantIndex={handleVariantIndexChange}
                   />
 
-                  {isCard && <BuilderForm details={details} onChange={setDetails} />}
+                  <BuilderForm details={details} onChange={setDetails} />
 
                   {/* Generate Button */}
                   <div className="pt-2">

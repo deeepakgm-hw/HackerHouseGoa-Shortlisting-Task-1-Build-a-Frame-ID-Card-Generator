@@ -9,8 +9,8 @@ interface BuilderFormProps {
   onChange: (details: BuilderDetails) => void;
 }
 
-const STACKS = ['React / Frontend', 'Node.js / Backend', 'Python / AI / ML', 'Solidity / Web3', 'Flutter / iOS / Android', 'AWS / DevOps', 'UI/UX Design'];
-const ROLES = ['Developer', 'Engineer', 'Hacker', 'Designer', 'Architect', 'Wizard', 'Maker'];
+const STACKS = ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Python', 'Java', 'C++', 'Flutter', 'AI / ML', 'Full Stack', 'Other'];
+const ROLES = ['Builder', 'Developer', 'Designer', 'AI Engineer', 'ML Engineer', 'Product Builder', 'Founder', 'Student', 'Hacker', 'Other'];
 
 export default function BuilderForm({ details, onChange }: BuilderFormProps) {
   const updateField = (field: keyof BuilderDetails, value: string) => {
@@ -28,8 +28,8 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
   return (
     <div className="w-full space-y-6 bg-[#faf8f0] p-6 border-3 border-[#0a2e1d] shadow-[4px_4px_0px_0px_#0a2e1d] text-[#0b4f30]">
       <div className="border-b border-[#0a2e1d]/20 pb-3">
-        <h3 className="text-xl font-bold uppercase font-serif tracking-tight text-[#0b4f30] mb-0.5">Hacker Details</h3>
-        <p className="text-xs text-[#0a2e1d]/70 font-mono">Fill in metadata to imprint your Goa Pass.</p>
+        <h3 className="text-xl font-bold uppercase font-serif tracking-tight text-[#0b4f30] mb-0.5">✦ Builder Details</h3>
+        <p className="text-xs text-[#0a2e1d]/70 font-mono">Fill in metadata to imprint your Goa badge.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -39,7 +39,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
           <input
             id="name"
             type="text"
-            placeholder="Your full name"
+            placeholder="Your name"
             value={details.name}
             onChange={handleInputChange('name')}
             maxLength={25}
@@ -60,12 +60,11 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
             {STACKS.map(st => (
               <option key={st} value={st}>{st}</option>
             ))}
-            <option value="custom">Other / Custom</option>
           </select>
         </div>
 
         {/* Custom Stack */}
-        {details.stack === 'custom' && (
+        {(details.stack === 'Other' || details.stack === 'custom') && (
           <div className="flex flex-col gap-1.5 animate-fadeIn">
             <label htmlFor="custom-stack" className="text-sm font-label-lg uppercase tracking-wider text-[#0a2e1d]">Specify Stack</label>
             <input
@@ -100,7 +99,7 @@ export default function BuilderForm({ details, onChange }: BuilderFormProps) {
           <input
             id="location"
             type="text"
-            placeholder="Your city or 'Remote'"
+            placeholder="Goa, India"
             value={details.location}
             onChange={handleInputChange('location')}
             maxLength={20}
