@@ -101,26 +101,26 @@ export default function Generator() {
   return (
     <div className="w-full font-sans select-none flex flex-col items-center">
       {/* 1. Main Tab Navigation Header Section (Full-Width Viewport-Wide Band with 3 Individual Cards) */}
-      <section className="w-full border-t-3 border-b-3 border-[#0a2e1d] bg-[#0b4f30] py-6 md:py-8 z-20">
-        <div className="w-full max-w-[1300px] mx-auto px-6 overflow-x-auto scrollbar-none py-1">
-          <div className="grid grid-cols-3 gap-4 md:gap-6 min-w-[600px] sm:min-w-0">
+      <section className="w-full border-t-2 border-b-2 border-[#0a2e1d] bg-[#0b4f30] pt-5 pb-6 z-20">
+        <div className="w-full max-w-[1200px] mx-auto px-6 overflow-x-auto scrollbar-none py-1">
+          <div className="grid grid-cols-3 gap-3 min-w-[500px] sm:min-w-0">
             {/* Button 1: MY FRAME */}
             <button
               type="button"
               onClick={() => { setActiveTab('frame'); setStep('upload'); }}
-              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+              className={`relative h-[52px] md:h-[60px] px-6 flex items-center justify-center rounded-[3px] border-2 border-[#0a2e1d] font-bold uppercase tracking-wider cursor-pointer transition-all duration-150 outline-none ${
                 activeTab === 'frame'
-                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
-                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-1.5px] hover:shadow-[3px_4.5px_0px_0px_#0a2e1d]'
               }`}
             >
               {activeTab === 'frame' && (
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#ff007f] block" />
               )}
-              <span className="text-sm md:text-[17px] flex items-center justify-center">
+              <span className="text-xs sm:text-sm md:text-base flex items-center justify-center">
                 <span className="hidden sm:inline">MY FRAME</span>
                 <span className="sm:hidden">FRAME</span>
-                <span className="text-[#0a2e1d]/50 font-mono text-[12px] ml-1.5">⌖</span>
+                <span className="text-[#0a2e1d]/50 font-mono text-[11px] ml-1.5">⌖</span>
               </span>
             </button>
 
@@ -128,19 +128,19 @@ export default function Generator() {
             <button
               type="button"
               onClick={() => { setActiveTab('pass'); setStep('upload'); }}
-              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+              className={`relative h-[52px] md:h-[60px] px-6 flex items-center justify-center rounded-[3px] border-2 border-[#0a2e1d] font-bold uppercase tracking-wider cursor-pointer transition-all duration-150 outline-none ${
                 activeTab === 'pass'
-                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
-                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-1.5px] hover:shadow-[3px_4.5px_0px_0px_#0a2e1d]'
               }`}
             >
               {activeTab === 'pass' && (
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#ff007f] block" />
               )}
-              <span className="text-sm md:text-[17px] flex items-center justify-center">
+              <span className="text-xs sm:text-sm md:text-base flex items-center justify-center">
                 <span className="hidden sm:inline">BUILDER PASS</span>
                 <span className="sm:hidden">PASS</span>
-                <span className="text-[#ff007f] text-[12px] ml-1.5">★</span>
+                <span className="text-[#ff007f] text-[11px] ml-1.5">★</span>
               </span>
             </button>
 
@@ -148,19 +148,19 @@ export default function Generator() {
             <button
               type="button"
               onClick={() => { setActiveTab('crew'); }}
-              className={`relative h-[56px] md:h-[78px] flex items-center justify-center rounded-[3px] border-3 border-[#0a2e1d] font-extrabold uppercase tracking-wider cursor-pointer transition-all duration-200 outline-none ${
+              className={`relative h-[52px] md:h-[60px] px-6 flex items-center justify-center rounded-[3px] border-2 border-[#0a2e1d] font-bold uppercase tracking-wider cursor-pointer transition-all duration-150 outline-none ${
                 activeTab === 'crew'
-                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d]'
-                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[4px_5px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-2px] hover:shadow-[4px_7px_0px_0px_#0a2e1d]'
+                  ? 'bg-[#fadb14] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d]'
+                  : 'bg-[#faf8f0] text-[#0b4f30] shadow-[3px_3px_0px_0px_#0a2e1d] hover:bg-[#fadb14]/10 hover:translate-y-[-1.5px] hover:shadow-[3px_4.5px_0px_0px_#0a2e1d]'
               }`}
             >
               {activeTab === 'crew' && (
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff007f] block" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#ff007f] block" />
               )}
-              <span className="text-sm md:text-[17px] flex items-center justify-center">
+              <span className="text-xs sm:text-sm md:text-base flex items-center justify-center">
                 <span className="hidden sm:inline">CREW MODE</span>
                 <span className="sm:hidden">CREW</span>
-                <span className="text-[#ff007f] text-[14px] ml-1.5">✦</span>
+                <span className="text-[#ff007f] text-[13px] ml-1.5">✦</span>
               </span>
             </button>
           </div>

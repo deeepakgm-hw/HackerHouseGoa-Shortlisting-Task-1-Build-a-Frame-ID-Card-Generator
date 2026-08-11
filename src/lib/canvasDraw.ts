@@ -380,34 +380,34 @@ export function drawBuilderCard(
 
   // 2. Main Event Header
   ctx.fillStyle = green;
-  ctx.fillRect(26, 26, w - 52, 160);
+  ctx.fillRect(26, 26, w - 52, 180);
 
   ctx.strokeStyle = yellow;
   ctx.lineWidth = 4;
-  ctx.strokeRect(38, 38, w - 76, 136);
+  ctx.strokeRect(38, 38, w - 76, 156);
 
   // Official Logo Drawing: "HACKER HOUSE" with overlapping Devanagari "गोवा" badge
-  ctx.font = 'bold 54px serif';
+  ctx.font = 'bold 62px serif';
   ctx.fillStyle = yellow;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('HACKER', w / 2, 68);
-  ctx.fillText('HOUSE', w / 2, 114);
+  ctx.fillText('HACKER', w / 2, 88);
+  ctx.fillText('HOUSE', w / 2, 136);
 
   ctx.save();
-  ctx.translate(w / 2, 91);
+  ctx.translate(w / 2, 112);
   ctx.rotate(-0.08);
   ctx.fillStyle = pink;
   ctx.strokeStyle = dark;
   ctx.lineWidth = 3.5;
-  const logoBadgeW = 96;
-  const logoBadgeH = 38;
+  const logoBadgeW = 110;
+  const logoBadgeH = 42;
   ctx.beginPath();
   ctx.roundRect(-logoBadgeW / 2, -logoBadgeH / 2, logoBadgeW, logoBadgeH, 12);
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = 'bold 22px sans-serif';
+  ctx.font = 'bold 24px sans-serif';
   ctx.fillStyle = yellow;
   ctx.fillText('गोवा', 0, 0);
   ctx.restore();
@@ -416,12 +416,12 @@ export function drawBuilderCard(
   ctx.font = '900 13px monospace';
   ctx.letterSpacing = '4px';
   ctx.fillStyle = cream;
-  ctx.fillText('OCT 28-31, 2026', w / 2, 150);
+  ctx.fillText('OCT 28-31, 2026', w / 2, 168);
 
   // 3. Profile Photo with Editorial Offset Framing
   const photoSize = 450;
   const photoX = w / 2 - photoSize / 2;
-  const photoY = 230;
+  const photoY = 245;
 
   // Offset paper-border (Yellow behind)
   ctx.save();
@@ -570,32 +570,32 @@ export function drawBuilderCard(
 
   // 6. GOA READY Stamp (Jagged Circle outline, stamped on card - highly legible)
   ctx.save();
-  ctx.translate(w - 240, contentY + 95);
-  ctx.rotate(-0.12);
+  ctx.translate(w - 145, metaY + 95); // Moved to lower-right area near metadata columns
+  ctx.rotate(-0.08);
   
-  // Outer circle with small tabs for stamp look
+  const stampR = 32; // 64px diameter
   ctx.fillStyle = pink;
   ctx.beginPath();
-  ctx.arc(0, 0, 72, 0, Math.PI * 2);
+  ctx.arc(0, 0, stampR, 0, Math.PI * 2);
   ctx.fill();
   ctx.strokeStyle = dark;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 2.5;
   ctx.stroke();
 
   ctx.strokeStyle = cream;
-  ctx.lineWidth = 2.5;
-  ctx.setLineDash([5, 4]);
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 2]);
   ctx.beginPath();
-  ctx.arc(0, 0, 60, 0, Math.PI * 2);
+  ctx.arc(0, 0, stampR - 5, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.font = '900 18px monospace';
+  ctx.font = '900 10px monospace';
   ctx.fillStyle = cream;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('GOA', 0, -18);
-  ctx.font = 'bold 28px serif';
-  ctx.fillText('READY', 0, 10);
+  ctx.fillText('GOA', 0, -8);
+  ctx.font = 'bold 12px serif';
+  ctx.fillText('READY', 0, 6);
   ctx.restore();
 
   // 7. Barcode & Serial Footer
@@ -651,7 +651,7 @@ export async function preloadCrewImages(members: any[]): Promise<Record<string, 
 }
 
 // Get standard layout box for member index (Card layout - 1080x1080 square)
-function getMemberLayoutCard(count: number, idx: number): { x: number; y: number; w: number; h: number } {
+export function getMemberLayoutCard(count: number, idx: number): { x: number; y: number; w: number; h: number } {
   if (count === 1) {
     // 1 member: center square
     return {
@@ -811,7 +811,7 @@ export function drawCrewCard(
 
   // 3. Crew Metadata Details
   const detailsY = 165;
-  ctx.font = 'bold 15px monospace';
+  ctx.font = 'bold 16px monospace';
   ctx.fillStyle = pink;
   ctx.textAlign = 'center';
   ctx.fillText(`✦ CREW PASS // CODE: ${crew.code} ✦`, w / 2, detailsY + 20);
@@ -861,7 +861,7 @@ export function drawCrewCard(
     // Draw member image
     const mImg = images[m.id];
     if (mImg) {
-      drawUserImage(ctx, mImg, layout.x, layout.y, layout.w, layout.h, { zoom: 1.0, panX: 0, panY: 0 });
+      drawUserImage(ctx, mImg, layout.x, layout.y, layout.w, layout.h, m.cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
     } else {
       ctx.fillStyle = '#c5d1c9';
       ctx.fillRect(layout.x, layout.y, layout.w, layout.h);
@@ -874,17 +874,31 @@ export function drawCrewCard(
 
     // Label banner at the bottom of each member photo
     ctx.save();
-    ctx.fillStyle = 'rgba(10, 46, 29, 0.88)';
-    ctx.fillRect(layout.x, layout.y + layout.h - 46, layout.w, 46);
+    ctx.fillStyle = 'rgba(10, 46, 29, 0.95)';
+    const bannerH = 76;
+    ctx.fillRect(layout.x, layout.y + layout.h - bannerH, layout.w, bannerH);
 
-    ctx.font = 'bold 13px sans-serif';
+    // Member Name (32px-40px target, with dynamic downscaling)
+    let nameSize = 34;
+    ctx.font = `bold ${nameSize}px sans-serif`;
+    while (ctx.measureText(m.name.toUpperCase()).width > layout.w - 16 && nameSize > 18) {
+      nameSize -= 2;
+      ctx.font = `bold ${nameSize}px sans-serif`;
+    }
     ctx.fillStyle = cream;
     ctx.textAlign = 'center';
-    ctx.fillText(m.name.toUpperCase(), layout.x + layout.w / 2, layout.y + layout.h - 28);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(m.name.toUpperCase(), layout.x + layout.w / 2, layout.y + layout.h - 48);
 
-    ctx.font = '900 8px monospace';
+    // Member Role / Title (18px-22px target, with dynamic downscaling)
+    let titleSize = 18;
+    ctx.font = `bold ${titleSize}px monospace`;
+    while (ctx.measureText(m.builderTitle.toUpperCase()).width > layout.w - 20 && titleSize > 11) {
+      titleSize -= 1;
+      ctx.font = `bold ${titleSize}px monospace`;
+    }
     ctx.fillStyle = yellow;
-    ctx.fillText(m.builderTitle.toUpperCase(), layout.x + layout.w / 2, layout.y + layout.h - 12);
+    ctx.fillText(m.builderTitle.toUpperCase(), layout.x + layout.w / 2, layout.y + layout.h - 20);
     ctx.restore();
   });
 
@@ -897,11 +911,14 @@ export function drawCrewCard(
   ctx.lineTo(w - 150, footerY);
   ctx.stroke();
 
-  ctx.font = 'bold 13px monospace';
-  ctx.fillStyle = green;
+  ctx.font = 'bold 15px monospace';
+  ctx.fillStyle = dark;
   ctx.textAlign = 'center';
   ctx.fillText(`CREW STACK // ${crew.crewStack || 'REACT • NODE • AI'}`, w / 2, footerY + 28);
-  ctx.fillText(`BUILT TOGETHER AT THE BEACH ✦ OCT 2026`, w / 2, footerY + 50);
+  
+  ctx.font = 'bold 14px monospace';
+  ctx.fillStyle = green;
+  ctx.fillText(`BUILT TOGETHER AT THE BEACH ✦ OCT 2026`, w / 2, footerY + 54);
 
   // 6. Barcode & Serial
   const barcodeY = h - 130;
@@ -919,8 +936,8 @@ export function drawCrewCard(
     cursorX += width;
   }
 
-  ctx.font = '12px monospace';
-  ctx.fillStyle = green;
+  ctx.font = 'bold 14px monospace';
+  ctx.fillStyle = dark;
   ctx.textAlign = 'center';
   ctx.fillText(`SERIAL: HH-CREW-${crew.code}`, w / 2, barcodeY + 65);
 
@@ -1034,7 +1051,7 @@ export function drawCrewPoster(
     // Draw member image
     const mImg = images[m.id];
     if (mImg) {
-      drawUserImage(ctx, mImg, layout.x, layout.y, layout.w, layout.h, { zoom: 1.0, panX: 0, panY: 0 });
+      drawUserImage(ctx, mImg, layout.x, layout.y, layout.w, layout.h, m.cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
     } else {
       ctx.fillStyle = '#c5d1c9';
       ctx.fillRect(layout.x, layout.y, layout.w, layout.h);
@@ -1133,7 +1150,7 @@ export function drawCrewPfp(
     
     const mImg = images[members[0].id];
     if (mImg) {
-      drawUserImage(ctx, mImg, cx - r, cy - r, r * 2, r * 2, { zoom: 1.0, panX: 0, panY: 0 });
+      drawUserImage(ctx, mImg, cx - r, cy - r, r * 2, r * 2, members[0].cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
     } else {
       ctx.fillStyle = '#c5d1c9';
       ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
@@ -1167,7 +1184,7 @@ export function drawCrewPfp(
     ctx.clip();
     const mImg1 = images[members[0].id];
     if (mImg1) {
-      drawUserImage(ctx, mImg1, cx1 - r, cy - r, r * 2, r * 2, { zoom: 1.0, panX: 0, panY: 0 });
+      drawUserImage(ctx, mImg1, cx1 - r, cy - r, r * 2, r * 2, members[0].cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
     } else {
       ctx.fillStyle = '#c5d1c9';
       ctx.fillRect(cx1 - r, cy - r, r * 2, r * 2);
@@ -1187,7 +1204,7 @@ export function drawCrewPfp(
     ctx.clip();
     const mImg2 = images[members[1].id];
     if (mImg2) {
-      drawUserImage(ctx, mImg2, cx2 - r, cy - r, r * 2, r * 2, { zoom: 1.0, panX: 0, panY: 0 });
+      drawUserImage(ctx, mImg2, cx2 - r, cy - r, r * 2, r * 2, members[1].cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
     } else {
       ctx.fillStyle = '#c5d1c9';
       ctx.fillRect(cx2 - r, cy - r, r * 2, r * 2);
@@ -1223,7 +1240,7 @@ export function drawCrewPfp(
       ctx.clip();
       const mImg = images[c.member.id];
       if (mImg) {
-        drawUserImage(ctx, mImg, c.cx - r, c.cy - r, r * 2, r * 2, { zoom: 1.0, panX: 0, panY: 0 });
+        drawUserImage(ctx, mImg, c.cx - r, c.cy - r, r * 2, r * 2, c.member.cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
       } else {
         ctx.fillStyle = '#c5d1c9';
         ctx.fillRect(c.cx - r, c.cy - r, r * 2, r * 2);

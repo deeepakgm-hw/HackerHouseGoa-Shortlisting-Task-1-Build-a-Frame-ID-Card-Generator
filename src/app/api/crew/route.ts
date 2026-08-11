@@ -185,6 +185,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });
     }
 
+    // 4. UPDATE CROP ACTION
+    if (action === 'updateCrop') {
+      const { code, memberId, cropSettings } = body;
+
+      if (!code || !memberId || !cropSettings) {
+        return NextResponse.json({ success: false, error: 'Missing required parameters' }, { status: 400 });
+      }
+
+      const crew = await getCrew(code);
+      if (!crew) {
+        return NextResponse.json({ success: false, error: 'Crew not found' }, { status: 404 });
+      }
+
+      crew.members = crew.members.map(m => {
+        if (m.id === memberId) {
+          return {
+            ...m,
+            cropSettings
+          };
+        }
+        return m;
+      });
+
+      await saveCrew(crew);
+      return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });
+    }
+
     return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
   } catch (err: unknown) {
     console.error('API crew failed:', err);

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, Copy, Clipboard, Check, Trash2, ArrowRight, ArrowLeft, Download, Share2, RefreshCw } from 'lucide-react';
 import PhotoUpload from './PhotoUpload';
 import { Crew, Member, calculateCrewClass, calculateCrewStack } from '../lib/crewDb';
-import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp, BuilderDetails } from '../lib/canvasDraw';
+import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp, BuilderDetails, drawUserImage, getMemberLayoutCard } from '../lib/canvasDraw';
 
 interface CrewWorkspaceProps {
   initialCode?: string;
@@ -60,6 +60,55 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
   const [activeResultType, setActiveResultType] = useState<'card' | 'poster' | 'pfp'>('card');
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
+
+  // Crop settings state for Crew Member Photo
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
+  const [tempCropSettings, setTempCropSettings] = useState<{ zoom: number; panX: number; panY: number } | null>(null);
+  const [isCropDragging, setIsCropDragging] = useState(false);
+  const [cropDragStart, setCropDragStart] = useState({ x: 0, y: 0 });
+
+  const memberCanvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [memberImage, setMemberImage] = useState<HTMLImageElement | null>(null);
+
+  // Load member image on edit start
+  useEffect(() => {
+    if (!editingMember) {
+      setMemberImage(null);
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = editingMember.photo;
+    img.onload = () => {
+      setMemberImage(img);
+    };
+  }, [editingMember]);
+
+  // Redraw preview canvas on crop settings or image change
+  useEffect(() => {
+    const canvas = memberCanvasRef.current;
+    if (!canvas || !memberImage || !tempCropSettings || !editingMember || !crew) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const idx = crew.members.findIndex(m => m.id === editingMember.id);
+    if (idx === -1) return;
+    const layout = getMemberLayoutCard(crew.members.length, idx);
+    
+    // Set canvas dimensions equal to layout dimensions
+    canvas.width = layout.w;
+    canvas.height = layout.h;
+    
+    ctx.clearRect(0, 0, layout.w, layout.h);
+    
+    // Draw the user image using drawUserImage
+    drawUserImage(ctx, memberImage, 0, 0, layout.w, layout.h, tempCropSettings);
+    
+    // Draw the outer pink border
+    ctx.strokeStyle = '#ff007f';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(0, 0, layout.w, layout.h);
+  }, [memberImage, tempCropSettings, editingMember, crew]);
 
   // Load crew from URL parameters or local storage
   useEffect(() => {
@@ -210,6 +259,67 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStartCrop = (m: Member) => {
+    setEditingMember(m);
+    setTempCropSettings(m.cropSettings || { zoom: 1.0, panX: 0, panY: 0 });
+  };
+
+  const handleApplyCrop = async () => {
+    if (!crew || !editingMember || !tempCropSettings) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/crew', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'updateCrop',
+          code: crew.code,
+          memberId: editingMember.id,
+          cropSettings: tempCropSettings,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.crew) {
+        setCrew(data.crew);
+        setEditingMember(null);
+        setTempCropSettings(null);
+      } else {
+        alert(data.error || 'Failed to update photo crop settings.');
+      }
+    } catch (err) {
+      alert('Network failure. Could not save photo adjustments.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCropPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsCropDragging(true);
+    setCropDragStart({
+      x: e.clientX - (tempCropSettings?.panX || 0),
+      y: e.clientY - (tempCropSettings?.panY || 0),
+    });
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleCropPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isCropDragging || !tempCropSettings) return;
+    e.preventDefault();
+    const newPanX = e.clientX - cropDragStart.x;
+    const newPanY = e.clientY - cropDragStart.y;
+    setTempCropSettings({
+      ...tempCropSettings,
+      panX: newPanX,
+      panY: newPanY,
+    });
+  };
+
+  const handleCropPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsCropDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
   };
 
   const handleGenerate = async () => {
@@ -663,10 +773,24 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
                     <p className="text-[14px] font-mono text-[#0a2e1d]/85 font-bold uppercase truncate">{m.role} // {m.stack}</p>
                     
                     {/* Assigned Title */}
-                    <div className="pt-1.5">
-                      <span className="inline-block px-2.5 py-1 bg-[#fadb14] text-[#0b4f30] border border-[#0a2e1d] font-caption font-bold uppercase rounded">
+                    <div className="pt-1.5 flex items-center justify-between gap-2">
+                      <span className="inline-block px-2.5 py-1 bg-[#fadb14] text-[#0b4f30] border border-[#0a2e1d] font-caption font-bold uppercase rounded truncate max-w-[150px]" title={m.builderTitle}>
                         {m.builderTitle}
                       </span>
+                      <span className="text-[11px] font-mono text-emerald-600 font-bold shrink-0 flex items-center gap-0.5 select-none">
+                        ✓ READY
+                      </span>
+                    </div>
+
+                    {/* Adjust Photo Button */}
+                    <div className="pt-3 border-t border-[#0a2e1d]/10 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => handleStartCrop(m)}
+                        className="w-full py-2 bg-[#faf8f0] hover:bg-[#ff007f] text-[#0b4f30] hover:text-[#faf8f0] border-2 border-[#0a2e1d] font-label-md uppercase tracking-wider cursor-pointer shadow-[2px_2px_0px_0px_#0a2e1d] hover:translate-y-[-1px] hover:shadow-[2px_3px_0px_0px_#0a2e1d] active:translate-y-0 active:shadow-[2px_2px_0px_0px_#0a2e1d] transition-all duration-150 outline-none"
+                      >
+                        ADJUST PHOTO
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -975,6 +1099,92 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             >
               <RefreshCw className="w-3.5 h-3.5" /> CREATE NEW CREW
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 6. MEMBER PHOTO CROP EDITOR MODAL */}
+      {editingMember && tempCropSettings && crew && (
+        <div className="fixed inset-0 bg-[#0a2e1d]/90 flex items-center justify-center p-4 z-[9999] backdrop-blur-sm">
+          <div className="bg-[#faf8f0] border-3 border-[#0a2e1d] p-6 max-w-md w-full shadow-[8px_8px_0px_0px_#0a2e1d] text-[#0b4f30] flex flex-col items-center gap-5">
+            <div className="text-center space-y-1.5 w-full">
+              <span className="font-caption text-[#ff007f] font-bold block uppercase tracking-wider">✦ ADJUST MEMBER PHOTO</span>
+              <h3 className="text-xl font-bold font-serif uppercase tracking-tight text-[#0b4f30] truncate">
+                {editingMember.name}
+              </h3>
+              <p className="font-sans text-xs text-[#0a2e1d]/85 leading-relaxed">
+                Drag to reposition. Use the scale slider below to fit inside the frame.
+              </p>
+            </div>
+
+            {/* Interactive Canvas Drag Box */}
+            <div
+              onPointerDown={handleCropPointerDown}
+              onPointerMove={handleCropPointerMove}
+              onPointerUp={handleCropPointerUp}
+              className="relative touch-none cursor-move select-none overflow-hidden border-3 border-[#0a2e1d] bg-[#faf8f0] shadow-[4px_4px_0px_0px_#0a2e1d] w-full max-w-[280px]"
+              style={{
+                aspectRatio: (() => {
+                  const idx = crew.members.findIndex(m => m.id === editingMember.id);
+                  const layout = getMemberLayoutCard(crew.members.length, idx);
+                  return `${layout.w}/${layout.h}`;
+                })()
+              }}
+            >
+              <canvas
+                ref={memberCanvasRef}
+                className="w-full h-full pointer-events-none"
+              />
+              <div className="absolute inset-0 border border-dashed border-[#ff007f]/45 pointer-events-none" />
+            </div>
+
+            {/* Sliders and Controls */}
+            <div className="w-full flex flex-col gap-4 bg-white p-4 border-2 border-[#0a2e1d] rounded-lg">
+              <div className="flex items-center justify-between text-[#0b4f30] font-sans font-bold text-xs">
+                <span className="flex items-center gap-1">Scale Image</span>
+                <span>{tempCropSettings.zoom.toFixed(2)}x</span>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="1.0"
+                  max="3.0"
+                  step="0.05"
+                  value={tempCropSettings.zoom}
+                  onChange={(e) => setTempCropSettings({ ...tempCropSettings, zoom: parseFloat(e.target.value) })}
+                  className="w-full h-2 bg-[#faf8f0] border-2 border-[#0a2e1d] rounded-lg appearance-none cursor-pointer accent-[#ff007f] focus:outline-none"
+                />
+                
+                <button
+                  type="button"
+                  onClick={() => setTempCropSettings({ zoom: 1.0, panX: 0, panY: 0 })}
+                  className="px-2.5 py-1.5 border-2 border-[#0a2e1d] text-xs font-bold font-mono hover:bg-[#ff007f] hover:text-white transition-colors cursor-pointer select-none"
+                >
+                  RESET
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-4 w-full mt-1">
+              <button
+                type="button"
+                onClick={() => { setEditingMember(null); setTempCropSettings(null); }}
+                className="w-full py-2.5 border-2 border-[#0a2e1d] text-[#0b4f30] hover:bg-[#ff007f] hover:text-white font-label-md uppercase tracking-wider transition-colors cursor-pointer outline-none"
+              >
+                CANCEL
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleApplyCrop}
+                disabled={loading}
+                className="w-full py-2.5 bg-[#fadb14] text-[#0b4f30] border-2 border-[#0a2e1d] hover:bg-[#fadb14]/80 font-label-md font-extrabold uppercase tracking-wider cursor-pointer shadow-[2px_2px_0px_0px_#0a2e1d] outline-none"
+              >
+                {loading ? 'SAVING...' : 'APPLY'}
+              </button>
+            </div>
           </div>
         </div>
       )}

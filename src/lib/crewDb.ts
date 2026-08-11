@@ -9,6 +9,11 @@ export interface Member {
   xHandle?: string;
   photo: string; // Vercel Blob URL or base64
   joinedAt: string;
+  cropSettings?: {
+    zoom: number;
+    panX: number;
+    panY: number;
+  };
 }
 
 export interface Crew {
