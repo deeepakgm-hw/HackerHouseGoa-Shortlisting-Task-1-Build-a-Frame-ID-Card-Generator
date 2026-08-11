@@ -46,7 +46,7 @@ export default function CropAdjuster({
     if (isCard) {
       drawBuilderCard(canvas, image, settings, details, variantIndex);
     } else {
-      drawPfpFrame(canvas, image, settings, variantIndex);
+      drawPfpFrame(canvas, image, settings, details, variantIndex);
     }
   }, [image, isCard, settings, details, variantIndex]);
 

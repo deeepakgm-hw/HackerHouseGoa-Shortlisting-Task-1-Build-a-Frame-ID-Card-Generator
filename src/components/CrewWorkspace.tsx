@@ -5,6 +5,7 @@ import { Sparkles, Loader2, Copy, Clipboard, Check, Trash2, ArrowRight, ArrowLef
 import PhotoUpload from './PhotoUpload';
 import { Crew, Member, calculateCrewClass, calculateCrewStack } from '../lib/crewDb';
 import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp, BuilderDetails, drawUserImage, getMemberLayoutCard } from '../lib/canvasDraw';
+import DesignSelector from './DesignSelector';
 
 interface CrewWorkspaceProps {
   initialCode?: string;
@@ -352,7 +353,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       const cardCanvas = document.createElement('canvas');
       cardCanvas.width = 1080;
       cardCanvas.height = 1080;
-      drawCrewCard(cardCanvas, crew, loadedImages);
+      drawCrewCard(cardCanvas, crew, loadedImages, crew.variantIndex || 0);
       const cardUrl = cardCanvas.toDataURL('image/png');
       setGeneratedCardUrl(cardUrl);
 
@@ -360,7 +361,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       const posterCanvas = document.createElement('canvas');
       posterCanvas.width = 1080;
       posterCanvas.height = 1350;
-      drawCrewPoster(posterCanvas, crew, loadedImages);
+      drawCrewPoster(posterCanvas, crew, loadedImages, crew.variantIndex || 0);
       const posterUrl = posterCanvas.toDataURL('image/png');
       setGeneratedPosterUrl(posterUrl);
 
@@ -368,7 +369,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       const pfpCanvas = document.createElement('canvas');
       pfpCanvas.width = 1080;
       pfpCanvas.height = 1080;
-      drawCrewPfp(pfpCanvas, crew, loadedImages);
+      drawCrewPfp(pfpCanvas, crew, loadedImages, crew.variantIndex || 0);
       const pfpUrl = pfpCanvas.toDataURL('image/png');
       setGeneratedPfpUrl(pfpUrl);
 
@@ -437,6 +438,66 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       setError('Failed to assemble builder cards into graphics.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateCrewTheme = async (idx: number) => {
+    if (!crew) return;
+    
+    // Optimistic UI state update
+    const updatedCrew = { ...crew, variantIndex: idx };
+    setCrew(updatedCrew);
+
+    // If owner, persist theme in DB
+    if (ownerToken) {
+      try {
+        await fetch('/api/crew', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'updateTheme',
+            code: crew.code,
+            ownerToken,
+            variantIndex: idx,
+          }),
+        });
+      } catch (err) {
+        console.error('Failed to persist crew theme:', err);
+      }
+    }
+
+    // If already generated results, re-render immediately to update preview!
+    if (view === 'result') {
+      setLoading(true);
+      setError(null);
+      try {
+        const loadedImages = await preloadCrewImages(updatedCrew.members);
+        
+        const cardCanvas = document.createElement('canvas');
+        cardCanvas.width = 1080;
+        cardCanvas.height = 1080;
+        drawCrewCard(cardCanvas, updatedCrew, loadedImages, idx);
+        const cardUrl = cardCanvas.toDataURL('image/png');
+        setGeneratedCardUrl(cardUrl);
+
+        const posterCanvas = document.createElement('canvas');
+        posterCanvas.width = 1080;
+        posterCanvas.height = 1350;
+        drawCrewPoster(posterCanvas, updatedCrew, loadedImages, idx);
+        const posterUrl = posterCanvas.toDataURL('image/png');
+        setGeneratedPosterUrl(posterUrl);
+
+        const pfpCanvas = document.createElement('canvas');
+        pfpCanvas.width = 1080;
+        pfpCanvas.height = 1080;
+        drawCrewPfp(pfpCanvas, updatedCrew, loadedImages, idx);
+        const pfpUrl = pfpCanvas.toDataURL('image/png');
+        setGeneratedPfpUrl(pfpUrl);
+      } catch (err) {
+        console.error('Immediate re-render failed:', err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -888,6 +949,17 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
             </div>
           </div>
 
+          {/* Design Theme Selector (only for Crew Owner) */}
+          {ownerToken && (
+            <div className="max-w-xl mx-auto w-full">
+              <DesignSelector
+                variantIndex={crew.variantIndex || 0}
+                setVariantIndex={handleUpdateCrewTheme}
+                hideFormat={true}
+              />
+            </div>
+          )}
+
           {/* Action CTAs: Generate Crew Card/Poster */}
           {crew.members.length >= 1 ? (
             <div className="p-5 border-3 border-[#0a2e1d] bg-[#fadb14] text-[#0b4f30] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[4px_4px_0px_0px_#0a2e1d]">
@@ -1085,6 +1157,15 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
               CREW PFP
             </button>
           </div>
+
+          {/* Design Theme Selector (only for Crew Owner on result screen) */}
+          {ownerToken && (
+            <DesignSelector
+              variantIndex={crew.variantIndex || 0}
+              setVariantIndex={handleUpdateCrewTheme}
+              hideFormat={true}
+            />
+          )}
 
           {/* Canvas Image Display */}
           <div className="relative overflow-hidden border-3 border-[#0a2e1d] bg-[#faf8f0] p-3 shadow-[8px_8px_0px_0px_#0a2e1d]">

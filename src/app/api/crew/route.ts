@@ -83,6 +83,7 @@ export async function POST(request: Request) {
         crewStack: members.length > 0 ? calculateCrewStack(members) : '',
         createdAt: new Date().toISOString(),
         members,
+        variantIndex: typeof body.variantIndex === 'number' ? body.variantIndex : 0,
       };
 
       await saveCrew(newCrew);
@@ -207,6 +208,30 @@ export async function POST(request: Request) {
         }
         return m;
       });
+
+      await saveCrew(crew);
+      return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });
+    }
+
+    // 6. UPDATE THEME ACTION
+    if (action === 'updateTheme') {
+      const { code, ownerToken, variantIndex } = body;
+
+      if (!code || !ownerToken || typeof variantIndex !== 'number') {
+        return NextResponse.json({ success: false, error: 'Missing required parameters' }, { status: 400 });
+      }
+
+      const crew = await getCrew(code);
+      if (!crew) {
+        return NextResponse.json({ success: false, error: 'Crew not found' }, { status: 404 });
+      }
+
+      // Validate ownerToken
+      if (crew.ownerToken !== ownerToken) {
+        return NextResponse.json({ success: false, error: 'Unauthorized: Invalid owner token' }, { status: 403 });
+      }
+
+      crew.variantIndex = variantIndex;
 
       await saveCrew(crew);
       return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });

@@ -38,6 +38,26 @@ export default function Generator() {
     title: '',
   });
 
+  // Load variantIndex on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('hh-goa-variant-index');
+      if (saved !== null) {
+        const idx = parseInt(saved, 10);
+        if (!isNaN(idx) && idx >= 0 && idx <= 2) {
+          setVariantIndex(idx);
+        }
+      }
+    }
+  }, []);
+
+  const handleVariantIndexChange = (idx: number) => {
+    setVariantIndex(idx);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hh-goa-variant-index', String(idx));
+    }
+  };
+
   // Client-side parsing of URL query params
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -80,7 +100,7 @@ export default function Generator() {
       if (isCard) {
         drawBuilderCard(canvas, img, imgSettings, details, variantIndex);
       } else {
-        drawPfpFrame(canvas, img, imgSettings, variantIndex);
+        drawPfpFrame(canvas, img, imgSettings, details, variantIndex);
       }
 
       setTimeout(() => {
@@ -278,7 +298,7 @@ export default function Generator() {
                     isCard={isCard}
                     setIsCard={(val) => setActiveTab(val ? 'pass' : 'frame')}
                     variantIndex={variantIndex}
-                    setVariantIndex={setVariantIndex}
+                    setVariantIndex={handleVariantIndexChange}
                   />
 
                   {isCard && <BuilderForm details={details} onChange={setDetails} />}

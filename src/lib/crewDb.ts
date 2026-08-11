@@ -27,6 +27,7 @@ export interface Crew {
   members: Member[];
   generatedCardUrl?: string;
   generatedPosterUrl?: string;
+  variantIndex?: number;
 }
 
 // In-memory fallback for local development if Vercel Blob is not set up
