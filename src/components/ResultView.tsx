@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download, Share2, Sparkles, RefreshCw, Edit, Clipboard, Check, Loader2, AlertCircle } from 'lucide-react';
+import { Download, Share2, RefreshCw, Edit, Clipboard, Check, Loader2, AlertCircle } from 'lucide-react';
+import { createXShareUrl } from '../lib/shareUtils';
 
 interface ResultViewProps {
   imageDataUrl: string;
@@ -42,29 +43,8 @@ export default function ResultView({
     setSharing(true);
     setError(null);
 
-    const caption = `Framed for HH Goa 2026! 🚀\n\nBuilding, shipping, and showing up in Goa.\n\n#FrameInGoa`;
+    const caption = `Just framed my Hacker House Goa 2026 builder identity! 🚀\nBuilding, creating & shipping from Goa.\n#FrameInGoa`;
 
-    // 1. Optional mobile native Web Share API enhancement
-    if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
-      try {
-        const response = await fetch(imageDataUrl);
-        const blob = await response.blob();
-        const file = new File([blob], getFilename(), { type: 'image/png' });
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: `HH Goa 2026 ${isCard ? 'Pass' : 'Frame'}`,
-            text: caption,
-          });
-          setSharing(false);
-          return;
-        }
-      } catch (e) {
-        console.warn('Native mobile share failed or was cancelled, falling back to upload-to-X flow:', e);
-      }
-    }
-
-    // 2. Desktop/Standard flow via Vercel Blob upload and Tweet Intent
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -84,10 +64,9 @@ export default function ResultView({
         const pageUrl = `${host}/share/badge?img=${encodeURIComponent(result.url)}&name=${encodeURIComponent(name || 'Builder')}`;
         setShareUrl(pageUrl);
 
-        const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}&url=${encodeURIComponent(pageUrl)}`;
+        const xUrl = createXShareUrl({ text: caption, shareUrl: pageUrl });
         window.open(xUrl, '_blank', 'noopener,noreferrer');
       } else {
-        // Return clear UI error instead of silently degrading
         setError(`Unable to create the shareable image right now. Please download the ${isCard ? 'pass' : 'frame'} instead.`);
       }
     } catch (err: unknown) {
@@ -95,6 +74,24 @@ export default function ResultView({
       setError(`Unable to create the shareable image right now. Please download the ${isCard ? 'pass' : 'frame'} instead.`);
     } finally {
       setSharing(false);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    const caption = `Just framed my Hacker House Goa 2026 builder identity! 🚀\nBuilding, creating & shipping from Goa.\n#FrameInGoa`;
+    try {
+      const response = await fetch(imageDataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], getFilename(), { type: 'image/png' });
+      if (navigator.share) {
+        await navigator.share({
+          files: [file],
+          title: `HH Goa 2026 ${isCard ? 'Pass' : 'Frame'}`,
+          text: caption,
+        });
+      }
+    } catch (e) {
+      console.warn('Native share failed:', e);
     }
   };
 
@@ -194,6 +191,20 @@ export default function ResultView({
           )}
         </button>
       </div>
+
+      {/* Optional native mobile share button */}
+      {typeof navigator !== 'undefined' && navigator.share !== undefined && (
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={handleNativeShare}
+            className="w-full py-3 bg-[#faf8f0] text-[#0b4f30] hover:bg-[#ff007f] hover:text-[#faf8f0] border-2 border-[#0a2e1d] font-label-md uppercase tracking-wider cursor-pointer shadow-[2px_2px_0px_0px_#0a2e1d] transition-all flex items-center justify-center gap-2 rounded-lg"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>Send to Mobile / Share...</span>
+          </button>
+        </div>
+      )}
 
       {/* Options */}
       <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#faf8f0]/10">

@@ -6,6 +6,7 @@ import PhotoUpload from './PhotoUpload';
 import { Crew, Member, calculateCrewClass, calculateCrewStack } from '../lib/crewDb';
 import { preloadCrewImages, drawCrewCard, drawCrewPoster, drawCrewPfp, BuilderDetails, drawUserImage, getMemberLayoutCard } from '../lib/canvasDraw';
 import DesignSelector from './DesignSelector';
+import { createXShareUrl } from '../lib/shareUtils';
 
 interface CrewWorkspaceProps {
   initialCode?: string;
@@ -514,28 +515,8 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
     const builderPlural = crew.members.length === 1 ? 'builder' : 'builders';
     const caption = `Meet ${crew.name} — a crew of ${crew.members.length} ${builderPlural} heading to HH Goa 2026.\n\n${crew.generatedClass} is ready! 🌴\n\n#FrameInGoa`;
 
-    // 1. Optional mobile native Web Share API enhancement
-    const filename = `${crew.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-crew.png`;
-    if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
-      try {
-        const response = await fetch(activeImage);
-        const blob = await response.blob();
-        const file = new File([blob], filename, { type: 'image/png' });
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: `HH Goa 2026 Crew Pass`,
-            text: caption,
-          });
-          setSharing(false);
-          return;
-        }
-      } catch (e) {
-        console.warn('Native mobile share failed or was cancelled, falling back to upload-to-X flow:', e);
-      }
-    }
-
     // 2. Desktop/Standard upload and share flow
+    const filename = `${crew.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-crew-${activeResultType}.png`;
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -553,7 +534,7 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
         const pageUrl = `${host}/share/crew?img=${encodeURIComponent(result.url)}&name=${encodeURIComponent(crew.name)}`;
         setShareUrl(pageUrl);
 
-        const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(caption)}&url=${encodeURIComponent(pageUrl)}`;
+        const xUrl = createXShareUrl({ text: caption, shareUrl: pageUrl });
         window.open(xUrl, '_blank', 'noopener,noreferrer');
       } else {
         setError('Unable to create the shareable image right now. Please download the crew pass instead.');
@@ -563,6 +544,33 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       setError('Unable to create the shareable image right now. Please download the crew pass instead.');
     } finally {
       setSharing(false);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    const activeImage = 
+      activeResultType === 'card' ? generatedCardUrl : 
+      activeResultType === 'poster' ? generatedPosterUrl : 
+      generatedPfpUrl;
+    if (!activeImage || !crew) return;
+
+    const builderPlural = crew.members.length === 1 ? 'builder' : 'builders';
+    const caption = `Meet ${crew.name} — a crew of ${crew.members.length} ${builderPlural} heading to HH Goa 2026.\n\n${crew.generatedClass} is ready! 🌴\n\n#FrameInGoa`;
+    const filename = `${crew.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-crew-${activeResultType}.png`;
+
+    try {
+      const response = await fetch(activeImage);
+      const blob = await response.blob();
+      const file = new File([blob], filename, { type: 'image/png' });
+      if (navigator.share) {
+        await navigator.share({
+          files: [file],
+          title: `HH Goa 2026 Crew ${activeResultType.toUpperCase()}`,
+          text: caption,
+        });
+      }
+    } catch (e) {
+      console.warn('Native share failed:', e);
     }
   };
 
@@ -1254,6 +1262,20 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
               )}
             </button>
           </div>
+
+          {/* Optional native mobile share button */}
+          {typeof navigator !== 'undefined' && navigator.share !== undefined && (
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={handleNativeShare}
+                className="w-full py-3 bg-[#faf8f0] text-[#0b4f30] hover:bg-[#ff007f] hover:text-[#faf8f0] border-2 border-[#0a2e1d] font-label-md uppercase tracking-wider cursor-pointer shadow-[2px_2px_0px_0px_#0a2e1d] transition-all flex items-center justify-center gap-2 rounded-lg"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Send to Mobile / Share...</span>
+              </button>
+            </div>
+          )}
 
           {/* Back actions */}
           <div className="flex items-center justify-center gap-6 pt-4 border-t border-[#faf8f0]/10">
