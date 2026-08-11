@@ -212,6 +212,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });
     }
 
+    // 5. SAVE GENERATED URLS ACTION
+    if (action === 'saveUrls') {
+      const { code, generatedCardUrl, generatedPosterUrl } = body;
+
+      if (!code) {
+        return NextResponse.json({ success: false, error: 'Missing crew code' }, { status: 400 });
+      }
+
+      const crew = await getCrew(code);
+      if (!crew) {
+        return NextResponse.json({ success: false, error: 'Crew not found' }, { status: 404 });
+      }
+
+      if (generatedCardUrl) crew.generatedCardUrl = generatedCardUrl;
+      if (generatedPosterUrl) crew.generatedPosterUrl = generatedPosterUrl;
+
+      await saveCrew(crew);
+      return NextResponse.json({ success: true, crew: { ...crew, ownerToken: '' } });
+    }
+
     return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
   } catch (err: unknown) {
     console.error('API crew failed:', err);

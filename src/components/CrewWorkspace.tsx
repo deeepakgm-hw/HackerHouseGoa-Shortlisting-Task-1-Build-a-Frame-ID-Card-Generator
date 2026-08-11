@@ -127,6 +127,18 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
     }
   }, [crew]);
 
+  // Load generated assets from crew if they exist
+  useEffect(() => {
+    if (crew) {
+      if (crew.generatedCardUrl) {
+        setGeneratedCardUrl(crew.generatedCardUrl);
+      }
+      if (crew.generatedPosterUrl) {
+        setGeneratedPosterUrl(crew.generatedPosterUrl);
+      }
+    }
+  }, [crew]);
+
   const fetchCrew = async (crewCode: string) => {
     setLoading(true);
     setError(null);
@@ -359,6 +371,65 @@ export default function CrewWorkspace({ initialCode, defaultDetails, defaultPhot
       drawCrewPfp(pfpCanvas, crew, loadedImages);
       const pfpUrl = pfpCanvas.toDataURL('image/png');
       setGeneratedPfpUrl(pfpUrl);
+
+      // 5. Upload generated assets to Vercel Blob and save to DB
+      let finalCardUrl = '';
+      let finalPosterUrl = '';
+      
+      try {
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: cardUrl,
+            filename: `${crew.code}-card.png`,
+          }),
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.success) {
+          finalCardUrl = uploadData.url;
+        }
+      } catch (e) {
+        console.error('Failed to upload crew card to Vercel Blob:', e);
+      }
+
+      try {
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: posterUrl,
+            filename: `${crew.code}-poster.png`,
+          }),
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.success) {
+          finalPosterUrl = uploadData.url;
+        }
+      } catch (e) {
+        console.error('Failed to upload crew poster to Vercel Blob:', e);
+      }
+
+      if (finalCardUrl || finalPosterUrl) {
+        try {
+          const saveRes = await fetch('/api/crew', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'saveUrls',
+              code: crew.code,
+              generatedCardUrl: finalCardUrl || undefined,
+              generatedPosterUrl: finalPosterUrl || undefined,
+            }),
+          });
+          const saveData = await saveRes.json();
+          if (saveData.success && saveData.crew) {
+            setCrew(saveData.crew);
+          }
+        } catch (e) {
+          console.error('Failed to save generated asset URLs to crew:', e);
+        }
+      }
 
       setView('result');
     } catch (err: unknown) {

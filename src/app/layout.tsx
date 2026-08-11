@@ -19,8 +19,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://hackerhouse.goa'),
   title: "HH Goa 2026 — Frame Your Build",
   description: "Generate your official HH Goa 2026 profile picture frame or builder ID card. Crop your photo, get your developer title, and share to X.",
+  openGraph: {
+    title: "HH Goa 2026 — Frame Your Build",
+    description: "Generate your official HH Goa 2026 profile picture frame or builder ID card. Crop your photo, get your developer title, and share to X.",
+    url: "https://hackerhouse.goa",
+    siteName: "HH Goa Builder House 2026",
+    images: [
+      {
+        url: "/studio-logo.png",
+        width: 800,
+        height: 800,
+        alt: "Hacker House Goa 2026 Logo",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HH Goa 2026 — Frame Your Build",
+    description: "Generate your official HH Goa 2026 profile picture frame or builder ID card. Crop your photo, get your developer title, and share to X.",
+    images: ["/studio-logo.png"],
+  },
 };
 
 export default function RootLayout({
